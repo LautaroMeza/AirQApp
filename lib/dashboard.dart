@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebaseflutter/data_level.dart';
 import 'package:firebaseflutter/main.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -216,7 +217,8 @@ class _DashboardState extends State<Dashboard>
                                       scale: 2,
                                   ),*/
                                    DataLevel(dataexample),
-                                  const Icon(Icons.thermostat_outlined,size: 35,),
+                                   const Spacer(),
+                                  Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.thermostat_outlined,size: 50,)),
                                         Text(
                                             '${tempAnimation.value}',
                                             style: const TextStyle(
@@ -226,15 +228,17 @@ class _DashboardState extends State<Dashboard>
                                           '°C', 
                                           style: TextStyle(
                                             fontSize: 50, fontWeight: FontWeight.bold),
-                                        )
-
+                                        ),
+                                        const Spacer(),
                             ]
                             ),
                             Row( 
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children:<Widget> [
                                     DataLevel(dataexample1),
-                                      const Icon(Icons.water_drop_outlined,size: 35,),
+                                     const Spacer(flex: 2,),
+                                     Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.water_drop_outlined,size: 50,)),
+
                                       Text(
                                           '${humidityAnimation.value}',
                                           style: const TextStyle(
@@ -244,13 +248,15 @@ class _DashboardState extends State<Dashboard>
                                         '%', 
                                         style: TextStyle(
                                           fontSize: 50, fontWeight: FontWeight.bold),
-                                      )
+                                      ),
+                                       const Spacer(flex:2),
                                     ],
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children:<Widget> [
                                 DataLevel(dataexample2),
+                                 const Spacer(),
                                 const Text('CO2',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
                                 Text(
                                     '${dioxAnimation.value}',
@@ -261,7 +267,8 @@ class _DashboardState extends State<Dashboard>
                                   'ppm', 
                                   style: TextStyle(
                                     fontSize: 40, fontWeight: FontWeight.bold),
-                                )
+                                ),
+                                 const Spacer(),
                               ],
                             ),
                             Row(
