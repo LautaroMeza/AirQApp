@@ -198,94 +198,126 @@ class _DashboardState extends State<Dashboard>
               mainAxisSpacing:1,
               crossAxisSpacing: 5,
               padding: const EdgeInsets.all(1),
-              childAspectRatio: 2, 
+              childAspectRatio: 5, 
               children:<Widget>[
-            Row( 
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children:<Widget> [
-                    Image.asset(
-                    'assets/images/termometro.png',
-                    alignment: Alignment.centerLeft,    
-                    scale: 2,
-                ),
-                const  Text('Temperatura'),
-                      Text(
-                          '${tempAnimation.value}',
-                           style: const TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        '°C', 
-                        style: TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                      )
+                            Row( 
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children:<Widget> [
+                                      /*Image.asset(
+                                      'assets/images/termometro.png',
+                                      alignment: Alignment.centerLeft,    
+                                      scale: 2,
+                                  ),*/
+                                  const Icon(Icons.thermostat_outlined,size: 35,),
+                                        Text(
+                                            '${tempAnimation.value}',
+                                            style: const TextStyle(
+                                                    fontSize: 50, fontWeight: FontWeight.bold),
+                                        ),
+                                        const Text(
+                                          '°C', 
+                                          style: TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                        )
 
-           ]
-          ),
-Row( 
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children:<Widget> [
-                      const Text('Humedad'),
-                      Text(
-                          '${humidityAnimation.value}',
-                           style: const TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        '%', 
-                        style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children:<Widget> [
-                      const Text('CO2'),
-                      Text(
-                          '${dioxAnimation.value}',
-                           style: const TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        'ppm', 
-                        style: TextStyle(
-                          fontSize: 25, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
- Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children:<Widget> [
-                      const Text('CO'),
-                      Text(
-                          '${monoxAnimation.value}',
-                           style: const TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        'ppm', 
-                        style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
-Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children:<Widget> [
-                      const Text('HCHO'),
-                      Text(
-                          '${hchoAnimation.value}',
-                           style: const TextStyle(
-                                  fontSize: 50, fontWeight: FontWeight.bold),
-                      ),
-                      const Text(
-                        'ppm', 
-                        style: TextStyle(
-                          fontSize: 30, fontWeight: FontWeight.bold),
-                      )
-                    ],
-                  ),
+                            ]
+                            ),
+                            Row( 
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children:<Widget> [
+                                      const Icon(Icons.water_drop_outlined,size: 35,),
+                                      Text(
+                                          '${humidityAnimation.value}',
+                                          style: const TextStyle(
+                                                  fontSize: 50, fontWeight: FontWeight.bold),
+                                      ),
+                                      const Text(
+                                        '%', 
+                                        style: TextStyle(
+                                          fontSize: 50, fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:<Widget> [
+                                const Text('CO2',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
+                                Text(
+                                    '${dioxAnimation.value}',
+                                    style: const TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  'ppm', 
+                                  style: TextStyle(
+                                    fontSize: 40, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:<Widget> [
+                                const Text('CO',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
+                                Text(
+                                    '${monoxAnimation.value}',
+                                    style: const TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  'ppm', 
+                                  style: TextStyle(
+                                    fontSize: 40, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:<Widget> [
+                                  const Text('HCHO',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
+                                Text(
+                                    '${hchoAnimation.value}',
+                                    style: const TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  'ppm', 
+                                  style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:<Widget> [
+                                const Text('PM10',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
+                                Text(
+                                    '${pm10Animation.value}',
+                                    style: const TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  'ppm', 
+                                  style: TextStyle(
+                                    fontSize: 40, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children:<Widget> [
+                                  const Text('PM2.5',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
+                                Text(
+                                    '${pm25Animation.value}',
+                                    style: const TextStyle(
+                                            fontSize: 50, fontWeight: FontWeight.bold),
+                                ),
+                                const Text(
+                                  'ppm', 
+                                  style: TextStyle(
+                                    fontSize: 30, fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
 
               ] ,
 
@@ -296,7 +328,7 @@ Row(
               fontSize: 30, fontWeight:  FontWeight.bold),
          )
      )),    
-      bottomNavigationBar: SizedBox(
+  /*    bottomNavigationBar: SizedBox(
       height: _screenRotate()? MediaQuery.of(context).size.height * 0.1:  MediaQuery.of(context).size.height * 0.2 , // altura dependiendo la orientacion
       //width: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,
       child: isLoading?Row(
@@ -338,7 +370,7 @@ Row(
               fontSize: 20, fontWeight:  FontWeight.bold),
          )
        ),
-
+*/
     );
   }
   Widget _generalstatuscont(double currval){
