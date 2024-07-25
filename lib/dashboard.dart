@@ -1,12 +1,8 @@
 import 'dart:async';
-
-import 'package:firebaseflutter/circle_progress.dart';
 import 'package:firebaseflutter/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
@@ -33,7 +29,7 @@ class _DashboardState extends State<Dashboard>
   late Animation<double> hchoAnimation;
   late Animation<double> pm10Animation; 
   late Animation<double> pm25Animation;
-   int data =0 ;
+       int data =0 ;
        Map<dynamic, dynamic>? jsonData;
   late List<dynamic>tempList;
   late List<dynamic>humidityList;
@@ -128,7 +124,7 @@ class _DashboardState extends State<Dashboard>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.blue.shade100,
         title: const Center(  child: Text('Calidad del Aire',textAlign: TextAlign.justify,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold),)),
       ),
@@ -164,33 +160,39 @@ class _DashboardState extends State<Dashboard>
           ],
         ),
           ),
-      body: Center(child: isLoading? GridView.count(
+      body: SafeArea(child: isLoading? GridView.count(
               crossAxisCount: _screenRotate()? 1:2,
               mainAxisSpacing:0,
               crossAxisSpacing: 80,
               childAspectRatio: 1,
               controller: ScrollController(keepScrollOffset: false),
               padding: const EdgeInsets.all(0),
-              
               children: <Widget>[
-            Column(
-              //verticalDirection: VerticalDirection.up,
-              children: [ 
-                _generalstatuscont(tempAnimation.value),
-                Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children:<Widget> [                
-                                Image.asset('assets/images/Status1.png',scale: 1.6,),
-                                Image.asset('assets/images/Status2.png',scale: 1.6,),
-                                Image.asset('assets/images/Status3.png',scale: 1.6,),
-                                Image.asset('assets/images/Status4.png',scale: 1.6,),
-                                Image.asset('assets/images/Status5.png',scale: 1.6,),
-                                ],
-                              ),
-
-                //Image.asset('assets/images/status.png',fit: BoxFit.contain,scale: 2,)
-                //foregroundDecoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/status.png'),fit: BoxFit.scaleDown),shape: BoxShape.rectangle),
-          
+                Flex(
+                    direction: Axis.vertical,
+                    children: [ 
+                                  Flexible(
+                                     fit: FlexFit.tight,
+                                     flex: 5,
+                                     child:_generalstatuscont(tempAnimation.value)),
+                      
+                                  Flexible(
+                                      fit: FlexFit.tight,
+                                      flex:1,
+                                      child:Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children:<Widget> [                
+                                              Image.asset('assets/images/Status1.png',scale: 1.6,),
+                                              Image.asset('assets/images/Status2.png',scale: 1.6,),
+                                              Image.asset('assets/images/Status3.png',scale: 1.6,),
+                                              Image.asset('assets/images/Status4.png',scale: 1.6,),
+                                              Image.asset('assets/images/Status5.png',scale: 1.6,),
+                                                   ],
+                                            ) 
+                                      )       
                   ]
-                ),
+            
+            ),
             GridView.count(
               crossAxisCount:1,
               mainAxisSpacing:1,
@@ -206,17 +208,7 @@ class _DashboardState extends State<Dashboard>
                     alignment: Alignment.centerLeft,    
                     scale: 2,
                 ),
-                CustomPaint(
-                foregroundPainter: CircleProgress(tempAnimation.value,50),
-                child: SizedBox(
-                width: 200,
-                height: 200,
-               // color: Colors.blueGrey.shade700,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:<Widget> [
-                      const Text('Temperatura'),
+                const  Text('Temperatura'),
                       Text(
                           '${tempAnimation.value}',
                            style: const TextStyle(
@@ -227,23 +219,11 @@ class _DashboardState extends State<Dashboard>
                         style: TextStyle(
                           fontSize: 25, fontWeight: FontWeight.bold),
                       )
-                    ],
-                  ),
-                ),
-              ),
-            ),
 
            ]
           ),
-            CustomPaint(
-              foregroundPainter: CircleProgress(humidityAnimation.value,100),
-              child: Container(
-                width: 200,
-                height: 200,
-                color:Colors.blueGrey.shade600,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+Row( 
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:<Widget> [
                       const Text('Humedad'),
                       Text(
@@ -258,18 +238,8 @@ class _DashboardState extends State<Dashboard>
                       )
                     ],
                   ),
-                ),
-              ),
-            ),
-            CustomPaint(
-              foregroundPainter: CircleProgress(dioxAnimation.value,2000),
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.blueGrey.shade700,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:<Widget> [
                       const Text('CO2'),
                       Text(
@@ -284,18 +254,8 @@ class _DashboardState extends State<Dashboard>
                       )
                     ],
                   ),
-                ),
-              ),
-            ),
-            CustomPaint(
-              foregroundPainter: CircleProgress(monoxAnimation.value,2000),
-              child: Container(
-              height: _screenRotate()? MediaQuery.of(context).size.height * 0.2: MediaQuery.of(context).size.height * 0.4,
-              width: MediaQuery.of(context).size.width*0.1,
-              color: Colors.blueGrey.shade700,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+ Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:<Widget> [
                       const Text('CO'),
                       Text(
@@ -310,18 +270,8 @@ class _DashboardState extends State<Dashboard>
                       )
                     ],
                   ),
-                ),
-              ),
-            ),
-            CustomPaint(
-              foregroundPainter: CircleProgress(hchoAnimation.value,1000),
-              child: Container(
-                width: 200,
-                height: 200,
-                color: Colors.blueGrey.shade600,
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children:<Widget> [
                       const Text('HCHO'),
                       Text(
@@ -336,22 +286,17 @@ class _DashboardState extends State<Dashboard>
                       )
                     ],
                   ),
-                ),
-              ),
-            ),
-            //Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children:<Widget> [Container(height:100, width: 100,color:  Colors.amber,),Container(height:100, width: 100,color: Colors.black,)],),
-          //  Text(data.toString())
+
               ] ,
 
             ),
             ],
-       //     )
-        ) : const Text('Cargando',
+        ) :const  Center(child:  Text('Cargando',
               style: TextStyle(
               fontSize: 30, fontWeight:  FontWeight.bold),
          )
-     ),    
-    bottomNavigationBar: SizedBox(
+     )),    
+      bottomNavigationBar: SizedBox(
       height: _screenRotate()? MediaQuery.of(context).size.height * 0.1:  MediaQuery.of(context).size.height * 0.2 , // altura dependiendo la orientacion
       //width: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,
       child: isLoading?Row(
