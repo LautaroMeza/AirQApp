@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+       home: const LoginScreen(title: 'Inicio de Sesion'),
   
       routes: {
         '/home':(context) => const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -173,104 +173,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 
-
-/*
-class LoginPage extends StatefulWidget {
-    const LoginPage({super.key, required this.title});
-
-    final String title;
-
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-  bool _isLoading = false;
-  
- 
-  Future<void> _signInWithEmailAndPassword() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: _emailController.text,
-        password: _passwordController.text,
-      );
-      if(mounted){
-         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-          content: Text('Bienvenido'),
-          ),
-        );      
-        //Navigator.pushReplacementNamed(context, '/home');
-         Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (context)=> const Dashboard()));
-      }else {
-        print("Build context destruido");
-      }
-    } on FirebaseAuthException {
-      if(mounted){
-        ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Datos incorrectos o usuario invalido'),
-        ),
-      );
-      }
-    }
-
-
-    setState(() {
-      _isLoading = false;
-    });
-    
-
-  }
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title:const Text('Login'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-              ),
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                labelText: 'Password',
-              ),
-              obscureText: true,
-            ),
-            const SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: _isLoading? null : _signInWithEmailAndPassword,
-              child: _isLoading
-                 ? const CircularProgressIndicator()
-                  : const Text('Login'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-*/
 class LoginScreen extends StatefulWidget {
   final String title;
   const LoginScreen({super.key,required this.title});  

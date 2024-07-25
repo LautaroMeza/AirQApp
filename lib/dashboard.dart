@@ -339,10 +339,8 @@ class _DashboardState extends State<Dashboard>
                 ),
               ),
             ),
-            Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children:<Widget> [Container(height:100, width: 100,color:  Colors.amber,),Container(height:100, width: 100,color: Colors.black,)],),
-             Text(
-              data.toString()       
-            )
+            //Row( mainAxisAlignment: MainAxisAlignment.spaceEvenly,children:<Widget> [Container(height:100, width: 100,color:  Colors.amber,),Container(height:100, width: 100,color: Colors.black,)],),
+          //  Text(data.toString())
               ] ,
 
             ),
@@ -352,12 +350,12 @@ class _DashboardState extends State<Dashboard>
               style: TextStyle(
               fontSize: 30, fontWeight:  FontWeight.bold),
          )
-     ),
-
+     ),    
     bottomNavigationBar: SizedBox(
       height: _screenRotate()? MediaQuery.of(context).size.height * 0.1:  MediaQuery.of(context).size.height * 0.2 , // altura dependiendo la orientacion
       //width: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,
       child: isLoading?Row(
+      
         //maxCrossAxisExtent: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,//crossAxisCount: 5,        
         //crossAxisCount: 5,
         mainAxisSize: MainAxisSize.min,
@@ -395,6 +393,7 @@ class _DashboardState extends State<Dashboard>
               fontSize: 20, fontWeight:  FontWeight.bold),
          )
        ),
+
     );
   }
   Widget _generalstatuscont(double currval){
