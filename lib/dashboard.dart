@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebaseflutter/data_level.dart';
 import 'package:firebaseflutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -29,6 +30,9 @@ class _DashboardState extends State<Dashboard>
   late Animation<double> hchoAnimation;
   late Animation<double> pm10Animation; 
   late Animation<double> pm25Animation;
+  late ValueNotifier<double> dataexample;
+  late ValueNotifier<double> dataexample1;
+  late ValueNotifier<double> dataexample2;
        int data =0 ;
        Map<dynamic, dynamic>? jsonData;
   late List<dynamic>tempList;
@@ -57,7 +61,10 @@ class _DashboardState extends State<Dashboard>
     if(jsonData ==null || jsonData != curr){
       jsonData = curr;
     }
-
+  dataexample = ValueNotifier((curr['Temperatura'])/(50)) ;
+  dataexample1 = ValueNotifier((curr['Humedad'])/(100)) ;
+  dataexample2 = ValueNotifier((curr['CO2'])/(2000)) ;
+    
     _dashboardInit(curr,jsonData);
     isLoading = true;
 
@@ -208,6 +215,7 @@ class _DashboardState extends State<Dashboard>
                                       alignment: Alignment.centerLeft,    
                                       scale: 2,
                                   ),*/
+                                   DataLevel(dataexample),
                                   const Icon(Icons.thermostat_outlined,size: 35,),
                                         Text(
                                             '${tempAnimation.value}',
@@ -225,6 +233,7 @@ class _DashboardState extends State<Dashboard>
                             Row( 
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children:<Widget> [
+                                    DataLevel(dataexample1),
                                       const Icon(Icons.water_drop_outlined,size: 35,),
                                       Text(
                                           '${humidityAnimation.value}',
@@ -241,6 +250,7 @@ class _DashboardState extends State<Dashboard>
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children:<Widget> [
+                                DataLevel(dataexample2),
                                 const Text('CO2',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
                                 Text(
                                     '${dioxAnimation.value}',
