@@ -1,7 +1,7 @@
 import 'dart:async';
+import 'package:firebaseflutter/data_control.dart';
 import 'package:firebaseflutter/data_level.dart';
 import 'package:firebaseflutter/main.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +22,7 @@ class _DashboardState extends State<Dashboard>
 
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
-
+/*
   late AnimationController progressController;
   late Animation<double> tempAnimation;
   late Animation<double> humidityAnimation; 
@@ -30,16 +30,18 @@ class _DashboardState extends State<Dashboard>
   late Animation<double> monoxAnimation; 
   late Animation<double> hchoAnimation;
   late Animation<double> pm10Animation; 
-  late Animation<double> pm25Animation;
+  late Animation<double> pm25Animation; */
+  
   late ValueNotifier<double> dataexample;
   late ValueNotifier<double> dataexample1;
   late ValueNotifier<double> dataexample2;
+  late List<ExpansionItem> lista;
+  late List<bool> oldExpandState;
        int data =0 ;
        Map<dynamic, dynamic>? jsonData;
   late List<dynamic>tempList;
   late List<dynamic>humidityList;
   late List<dynamic>dateList;    //Revisar. Aun no se como tratar los datos
-
   @override
   void initState(){
     super.initState();
@@ -62,11 +64,49 @@ class _DashboardState extends State<Dashboard>
     if(jsonData ==null || jsonData != curr){
       jsonData = curr;
     }
-  dataexample = ValueNotifier((curr['Temperatura'])/(50)) ;
+
+  dataexample = ValueNotifier((curr['Temperatura'])/(50)) ; // estos son para marcar el nivel, puede irse tal vez
   dataexample1 = ValueNotifier((curr['Humedad'])/(100)) ;
   dataexample2 = ValueNotifier((curr['CO2'])/(2000)) ;
-    
-    _dashboardInit(curr,jsonData);
+    //_dashboardInit(curr,jsonData);
+  setState(() {    
+    if(isLoading){
+        oldExpandState=[
+            lista[0].isExpanded,
+            lista[1].isExpanded,
+            lista[2].isExpanded,
+            lista[3].isExpanded,
+            lista[4].isExpanded,
+            lista[5].isExpanded,
+            lista[6].isExpanded,
+        ];
+    }else{
+      oldExpandState=[
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,        
+      ];
+    }
+    });
+    lista =[
+      ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: curr['Temperatura'],maxvalue: 50,unidad:'°C'),
+      ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: curr['Humedad'], maxvalue: 100, unidad: '%'),
+      
+      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monixido de carbono', currval: curr['CO2'],maxvalue: 2000,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: curr['CO'], maxvalue: 2000, unidad: 'ppm'),
+      
+      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: curr['PM_10'],maxvalue: 100,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: curr['PM2_5'], maxvalue: 100, unidad: 'ppm'),
+      
+      ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: curr['HCHO'],maxvalue: 500,unidad:'ppm'),
+
+    ];
+
+
     isLoading = true;
 
 
@@ -75,7 +115,7 @@ class _DashboardState extends State<Dashboard>
 
   }
 
-
+/*
   _dashboardInit(Map<dynamic,dynamic> curr, Map<dynamic,dynamic>? old){
     progressController = AnimationController(
       vsync: this, duration:  const Duration(milliseconds: 4500)); //5s
@@ -128,6 +168,8 @@ class _DashboardState extends State<Dashboard>
   
   }
 
+*/
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -182,7 +224,7 @@ class _DashboardState extends State<Dashboard>
                                   Flexible(
                                      fit: FlexFit.tight,
                                      flex: 5,
-                                     child:_generalstatuscont(tempAnimation.value)),
+                                     child:_generalstatuscont(30)),
                       
                                   Flexible(
                                       fit: FlexFit.tight,
@@ -201,24 +243,19 @@ class _DashboardState extends State<Dashboard>
                   ]
             
             ),
-            GridView.count(
-              crossAxisCount:1,
-              mainAxisSpacing:1,
-              crossAxisSpacing: 5,
-              padding: const EdgeInsets.all(1),
-              childAspectRatio: 5, 
-              children:<Widget>[
+                /*GridView.count(
+                  crossAxisCount: _screenRotate()? 1:2,
+                  mainAxisSpacing:1,
+                  crossAxisSpacing: 5,
+                  padding: const EdgeInsets.all(1),
+                  childAspectRatio: 5, 
+                  children:<Widget>[
                             Row( 
                                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children:<Widget> [
-                                      /*Image.asset(
-                                      'assets/images/termometro.png',
-                                      alignment: Alignment.centerLeft,    
-                                      scale: 2,
-                                  ),*/
                                    DataLevel(dataexample),
                                    const Spacer(),
-                                  Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.thermostat_outlined,size: 50,)),
+                                   Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.thermostat_outlined,size: 50,)),
                                         Text(
                                             '${tempAnimation.value}',
                                             style: const TextStyle(
@@ -232,6 +269,31 @@ class _DashboardState extends State<Dashboard>
                                         const Spacer(),
                             ]
                             ),
+                            
+                            */ListView(children: [
+                                  ExpansionPanelList(
+                              expansionCallback: (int index, isExpanded) {
+                                setState(() {
+                                  
+                                    lista[index].isExpanded =!lista[index].isExpanded;
+                                  
+                                  
+                                });
+                              },
+                              children: lista.map((ExpansionItem item) {
+                                return ExpansionPanel(
+                                  headerBuilder: (BuildContext context, bool isExpanded){
+                                            return titulo(item,_screenRotate());
+                                  },
+                                  isExpanded: item.isExpanded,
+                                  body: cuerpo(item),
+                                   );
+                              }
+                            ).toList(), ),
+                            ],
+                            )
+                            
+  /*
                             Row( 
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   children:<Widget> [
@@ -335,10 +397,10 @@ class _DashboardState extends State<Dashboard>
                                 )
                               ],
                             ),
+*/
+           //                 ] ,
 
-              ] ,
-
-            ),
+           //     ),
             ],
         ) :const  Center(child:  Text('Cargando',
               style: TextStyle(
