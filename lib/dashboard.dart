@@ -224,7 +224,7 @@ class _DashboardState extends State<Dashboard>
                                   Flexible(
                                      fit: FlexFit.tight,
                                      flex: 5,
-                                     child:_generalstatuscont(30)),
+                                     child:_generalstatuscont()),
                       
                                   Flexible(
                                       fit: FlexFit.tight,
@@ -452,7 +452,7 @@ class _DashboardState extends State<Dashboard>
 */
     );
   }
-  Widget _generalstatuscont(double currval){
+  Widget _generalstatuscont(){
   
 
     List <GaugeRange> buildrange(){
@@ -474,6 +474,12 @@ class _DashboardState extends State<Dashboard>
                       ),
                    ];
     }
+      double ratiomax =lista.first.currval/lista.first.maxvalue;
+      lista.map((e) {
+        if(ratiomax<e.currval/e.maxvalue){
+            ratiomax =e.currval/e.maxvalue;
+        }
+      },);
       
     return SfRadialGauge(
       //title: const GaugeTitle(text:'Estado del aire',textStyle: TextStyle(fontWeight: FontWeight.bold,fontSize:20)),
@@ -484,7 +490,7 @@ class _DashboardState extends State<Dashboard>
                   RadialAxis(
                     ranges: buildrange(),
                     minimum: 0,                  
-                    maximum: 50,                      
+                    maximum: 1,                      
                     showLabels: false,
                     showTicks: false,showAxisLine: true,
                     startAngle: 180,
@@ -496,7 +502,7 @@ class _DashboardState extends State<Dashboard>
                             animationDuration:2500,
                             enableDragging: false,
                             enableAnimation:  true,
-                            value:currval,
+                            value:ratiomax,
                             tailStyle: const TailStyle(
                                             width: 8,
                                             length: 0.15
@@ -555,7 +561,7 @@ class _DashboardState extends State<Dashboard>
         context: context,
         type:AlertType.warning,
         title:'Registro historico',
-        desc: 'Pagina en construccion',
+        desc: 'Pagina en construccion, FECHA ${dateTime(data)}',
         buttons: [DialogButton(
         onPressed:()=>Navigator.pop(context),
           width: 120,

@@ -2,17 +2,24 @@
 
 import 'package:flutter/material.dart';
 
-class DataControl extends StatelessWidget{
+class DataControl extends StatefulWidget{
   const DataControl({super.key});
-  
+
   @override
-  Widget build(BuildContext context) {
-    throw UnimplementedError;
+  State<StatefulWidget> createState() => _DataControlState();
+  
   }
   
 
-}
+class _DataControlState extends State<DataControl> {
 
+  @override
+  Widget build(BuildContext context) {return Container();}
+}
+String dateTime(int timestamp)
+{  var date =  DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000, isUtc: true);
+  return date.toString();
+}
 class ExpansionItem{
   bool isExpanded;
   final String magnitud;

@@ -85,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final DatabaseReference database = FirebaseDatabase.instance.ref();
 
   void _incrementCounter() {
-    setState(() {
+    
       // This call to setState tells the Flutter framework that something has
       // changed in this State, which causes it to rerun the build method below
       // so that the display can reflect the updated values. If we changed
@@ -96,14 +96,8 @@ class _MyHomePageState extends State<MyHomePage> {
         DataSnapshot snapshot = event.snapshot;
         _counter = snapshot.value.toString();
         });
-     /* database.child('usuarios').push().set({   //Escribiendo datos en la Base de Datos
-          'nombre': 'Juan',
-          'apellido': 'Perez',
-          'edad': 30
-        });*/
+        setState(() {    });
 
-     //Navigator.of(context).pushReplacement( MaterialPageRoute(builder: (context)=> const Dashboard()));
-    });
   }
 
   @override
@@ -238,6 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 Future<void> _handleSignIn() async {
     try {
+      
       await _googleSignIn.signIn();
     } catch (error) {
       if (kDebugMode) {
