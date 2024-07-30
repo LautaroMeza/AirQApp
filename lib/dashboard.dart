@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:firebaseflutter/data_control.dart';
-import 'package:firebaseflutter/data_level.dart';
 import 'package:firebaseflutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 class Dashboard extends StatefulWidget {
+
   const Dashboard({super.key});
 
   @override
@@ -20,7 +20,7 @@ class _DashboardState extends State<Dashboard>
 
   bool isLoading= false;
 
-  final GoogleSignIn googleSignIn = GoogleSignIn();
+   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
 /*
   late AnimationController progressController;
@@ -474,12 +474,12 @@ class _DashboardState extends State<Dashboard>
                       ),
                    ];
     }
-      double ratiomax =lista.first.currval/lista.first.maxvalue;
+    double ratiomax =lista.first.currval/lista.first.maxvalue;
       lista.map((e) {
         if(ratiomax<e.currval/e.maxvalue){
             ratiomax =e.currval/e.maxvalue;
         }
-      },);
+      },).toList();
       
     return SfRadialGauge(
       //title: const GaugeTitle(text:'Estado del aire',textStyle: TextStyle(fontWeight: FontWeight.bold,fontSize:20)),
@@ -557,7 +557,8 @@ class _DashboardState extends State<Dashboard>
       Navigator.pop(context);
     }
   _handleRegistro(){
-      Alert(
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const DataControl()));
+    /*  Alert(
         context: context,
         type:AlertType.warning,
         title:'Registro historico',
@@ -570,7 +571,7 @@ class _DashboardState extends State<Dashboard>
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         )]
-        ).show();
+        ).show();*/
     }
   _handleLoginOutPopUp(){
     Alert(
@@ -613,4 +614,5 @@ class _DashboardState extends State<Dashboard>
      
     
   }
+
 }
