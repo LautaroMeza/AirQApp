@@ -32,43 +32,31 @@ class _DashboardState extends State<Dashboard>
   late Animation<double> pm10Animation; 
   late Animation<double> pm25Animation; */
   
-  late ValueNotifier<double> dataexample;
+  /*late ValueNotifier<double> dataexample;
   late ValueNotifier<double> dataexample1;
-  late ValueNotifier<double> dataexample2;
+  late ValueNotifier<double> dataexample2;*/
   late List<ExpansionItem> lista;
   late List<bool> oldExpandState;
        int data =0 ;
-       Map<dynamic, dynamic>? jsonData;
-  late List<dynamic>tempList;
-  late List<dynamic>humidityList;
-  late List<dynamic>dateList;    //Revisar. Aun no se como tratar los datos
+  late Map<dynamic, dynamic> jsonData;
   @override
   void initState(){
     super.initState();
   
-     databaseReference
- .child('Sensores')
- .onValue.listen((event) {
-  if(event.snapshot.exists){
-    int valor = 1715205356;
-    Map<dynamic, dynamic> dataj=  event.snapshot.value as Map<dynamic, dynamic>;
-     data = dataj['$valor']['timespan'];
-  }});
-
    databaseReference
  .child('Actual')
  .onValue.listen((event) {
   if(event.snapshot.exists){
 
-    Map<dynamic, dynamic> curr=  event.snapshot.value as Map<dynamic, dynamic>;
-    if(jsonData ==null || jsonData != curr){
+  jsonData=  event.snapshot.value as Map<dynamic, dynamic>;
+   /* if(jsonData ==null || jsonData != curr){
       jsonData = curr;
     }
 
   dataexample = ValueNotifier((curr['Temperatura'])/(50)) ; // estos son para marcar el nivel, puede irse tal vez
   dataexample1 = ValueNotifier((curr['Humedad'])/(100)) ;
   dataexample2 = ValueNotifier((curr['CO2'])/(2000)) ;
-    //_dashboardInit(curr,jsonData);
+    //_dashboardInit(curr,jsonData);*/
   setState(() {    
     if(isLoading){
         oldExpandState=[
@@ -93,16 +81,16 @@ class _DashboardState extends State<Dashboard>
     }
     });
     lista =[
-      ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: curr['Temperatura'],maxvalue: 50,unidad:'°C'),
-      ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: curr['Humedad'], maxvalue: 100, unidad: '%'),
+      ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: 1.0*jsonData['Temperatura'],maxvalue: 50,unidad:'°C'),
+      ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 100, unidad: '%'),
       
-      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monixido de carbono', currval: curr['CO2'],maxvalue: 2000,unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: curr['CO'], maxvalue: 2000, unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monixido de carbono', currval: 1.0*jsonData['CO2'],maxvalue: 2000,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO'], maxvalue: 2000, unidad: 'ppm'),
       
-      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: curr['PM_10'],maxvalue: 100,unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: curr['PM2_5'], maxvalue: 100, unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 100,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 100, unidad: 'ppm'),
       
-      ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: curr['HCHO'],maxvalue: 500,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 500,unidad:'ppm'),
 
     ];
 
@@ -283,10 +271,10 @@ class _DashboardState extends State<Dashboard>
                               children: lista.map((ExpansionItem item) {
                                 return ExpansionPanel(
                                   headerBuilder: (BuildContext context, bool isExpanded){
-                                            return titulo(item,_screenRotate());
+                                            return tituloItem(item,_screenRotate());
                                   },
                                   isExpanded: item.isExpanded,
-                                  body: cuerpo(item),
+                                  body: cuerpoItem(item),
                                    );
                               }
                             ).toList(), ),

@@ -22,12 +22,17 @@ class DataControl extends StatefulWidget{
 
 class _DataControlState extends State<DataControl> {
   bool isLoading= false;
+  bool isEmpty=false;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
 
    //Map<dynamic, dynamic>? registros;
    List<dynamic>? registros;
-     int i=1;
+   List<ExpansionRegistro>? listRegistros;
+   late List<String> fechasReg;
+   late List<String> horasReg;
+   
+   int i=0;
    int datacount =100;
 @override
   void initState(){
@@ -50,14 +55,13 @@ class _DataControlState extends State<DataControl> {
       if(event.snapshot.exists){
             registros= event.snapshot.value as List?; //as Map<dynamic, dynamic>;
         setState(() { }); 
-        isLoading=true;
-
+         isEmpty = _createListTimes();
+          isLoading=true;
            }
         });  
 
-  
-  }
-
+   
+    }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,10 +102,77 @@ class _DataControlState extends State<DataControl> {
           ],
         ),
           ),
-      body: Center(child:isLoading?Text((registros!=null)?registros.toString():'Sin datos'):const Text('Cargando')));
+      body: //Center(child:isLoading?Text((registros!=null)?registros.toString():'Sin datos'):const Text('Cargando')));
+            Center(child: isLoading?ListView(children: [
+                                  !isEmpty?ExpansionPanelList(
+                              expansionCallback: (int index, isExpanded) {
+                                setState(() {
+                                  
+                                    listRegistros?[index].isExpanded =!listRegistros![index].isExpanded;
+                                  
+                                  
+                                });
+                              },
+                              children: listRegistros!.map((ExpansionRegistro item) {
+                                return ExpansionPanel(
+                                  headerBuilder: (BuildContext context, bool isExpanded){
+                                            return tituloRegis(item,_screenRotate());
+                                  },
+                                  isExpanded: item.isExpanded,
+                                  body: cuerpoRegis(item),
+                                   );
+                              }
+                            ).toList(), ):const Text('Por el momento no hay Registro'),
+                            ],
+                            ):const Text('Cargando'),
+                            ));
+
+
+
+
    
-   
+    
    }
+  bool _createListTimes(){
+    if(registros!=null){
+      ExpansionRegistro first= ExpansionRegistro(
+                                        hora:timeFormatTime(registros?.first['TimeStamp']),
+                                        fecha:timeFormatDate(registros?.first['TimeStamp']),
+                                        co:1.0*registros?.first['CO'],
+                                        temp:1.0*registros?.first['Temperatura'],
+                                        hum:1.0*registros?.first['Humedad'],
+                                        pm_10:1.0*registros?.first['PM_1'],
+                                        pm_25:1.0*registros?.first['PM2_5'],
+                                        hcho:1.0*registros?.first['HCHO'],
+                                        co2:1.0*registros?.first['CO2'],);
+    listRegistros =[first];
+    registros?.forEach((dynamic element) {
+      if(element!=registros?.first){
+        try{        
+          ExpansionRegistro item = ExpansionRegistro(
+                                        hora:timeFormatTime(element['TimeStamp']),
+                                        fecha:timeFormatDate(element['TimeStamp']),
+                                        co:1.0*element['CO'],
+                                        temp:1.0*element['Temperatura'],
+                                        hum:1.0*element['Humedad'],
+                                        pm_10:1.0*element['PM_1'],
+                                        pm_25:1.0*element['PM2_5'],
+                                        hcho:1.0*element['HCHO'],
+                                        co2:1.0*element['CO2'],
+                                        );
+          listRegistros?.add(item);
+          }catch(e){
+     // print('Error al agregar registro a la lista: $e');
+        }
+    }
+  });
+  return false;
+    }else{return true;}
+
+  }
+  bool _screenRotate(){
+        return (MediaQuery.of(context).orientation == Orientation.portrait);
+    }
   _handleHome(){
     //Navigator.of(context).pushReplacement(  
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Dashboard()),ModalRoute.withName('/'),);
@@ -167,16 +238,13 @@ class _DataControlState extends State<DataControl> {
   }
 
 }
-String dateTime(int timestamp)
-{  var date =  DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false);
-    final dateFormatter = DateFormat('dd-MM-yyyy');
-    final timeFormatter = DateFormat('HH:mm:ss');
 
-    final formattedDate = dateFormatter.format(date);
-    final formattedTime = timeFormatter.format(date);
-           
-  return '$formattedDate  $formattedTime';
-}
+String timeFormatDate(int timestamp){           
+    return DateFormat('dd-MM-yyyy').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false)); 
+  }
+String timeFormatTime(int timestamp){   
+    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false));     
+  }
 class ExpansionItem{
   bool isExpanded;
   final String magnitud;
@@ -185,7 +253,20 @@ class ExpansionItem{
   final double maxvalue;
   ExpansionItem({this.isExpanded=false,required this.magnitud,required this.currval,required this.unidad, required this.maxvalue,});
 }
-Widget titulo(ExpansionItem item,bool rotate){
+class ExpansionRegistro{
+  bool isExpanded;
+  final double temp;
+  final double hum;
+  final double pm_10;
+  final double pm_25;
+  final double hcho;
+  final double co;
+  final double co2;
+   String fecha;
+   String hora;
+  ExpansionRegistro({ required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
+  }
+Widget tituloItem(ExpansionItem item,bool rotate){
   Icon iconState = const Icon(Icons.abc,size: 0,);
   double status = item.currval/item.maxvalue;
   if(status>0.4 && status<0.6){ 
@@ -206,7 +287,13 @@ Widget titulo(ExpansionItem item,bool rotate){
                   ]
                );
 }
-Widget cuerpo(ExpansionItem item){
+Widget tituloRegis(ExpansionRegistro item,bool rotate){
+  return  Text(item.fecha ,style: const TextStyle(fontSize: 20),);
+}
+Widget cuerpoRegis(ExpansionRegistro item){
+  return  Text(item.hora ,style: const TextStyle(fontSize: 20),);
+}
+Widget cuerpoItem(ExpansionItem item){
 String path = 'assets/images/Status1.png';
 double status = item.currval/item.maxvalue;
   if(status<0.2){

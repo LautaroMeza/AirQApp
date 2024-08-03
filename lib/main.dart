@@ -246,59 +246,30 @@ Future<void> _handleSignIn() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Google Sign in'),),
-      body: GridView.extent(
-          maxCrossAxisExtent: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width : MediaQuery.of(context).size.height, // maximum item width
-          childAspectRatio: 3,
-          //crossAxisCount: (MediaQuery.of(context).orientation == Orientation.portrait)? 1:2,
-          mainAxisSpacing: 20.0, // spacing between rows
-          crossAxisSpacing: 20.0, // spacing between columns
-          padding: const EdgeInsets.all(8.0), // padding around the grid
-          children: <Widget>[
-            FloatingActionButton(
+      body: Center(
+         child:Column(
+          mainAxisAlignment: (MediaQuery.of(context).orientation == Orientation.portrait)?MainAxisAlignment.center:MainAxisAlignment.start,
+            children:[ 
+             Container(
+          height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.35 : MediaQuery.of(context).size.height*0.52, // maximum item width
+          width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.94: MediaQuery.of(context).size.height*0.85, // maximum item width
+          decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.fill),shape: BoxShape.rectangle),
+        ),
+          SizedBox(
+            height: 50,
+            width: 150,
+            child: FloatingActionButton(
               onPressed:_handleSignIn,
-              backgroundColor: Colors.amber,
-              child: const Text('Inicia Sesion'),
+              backgroundColor: Colors.white60,
+              elevation: 10,
+              child: const Text('Iniciar Sesion'),
             ),
-            Image.asset('assets/images/UTNLOGO.png'),
-            Container(
-              height: 10,
-              width: 10,
-              color: Colors.blue, // color of grid items
-              child: const Center(
-                child: Text(
-                  'item0',
-                  style:  TextStyle(fontSize: 18.0, color: Colors.white),
-                ),
-              ),
             ),
-            Container(
-              color: Colors.yellow, // color of grid items
-              child: const Center(
-                child: Text(
-                  'item1',
-                  style:  TextStyle(fontSize: 18.0, color: Colors.white),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.green, // color of grid items
-              child: const Center(
-                child: Text(
-                  'item2',
-                  style:  TextStyle(fontSize: 18.0, color: Colors.white),
-                ),
-              ),
-            ),
-            Container(
-              color: Colors.red, // color of grid items
-              child: const Center(
-                child: Text(
-                  'item3',
-                  style:  TextStyle(fontSize: 18.0, color: Colors.white),
-                ),
-              ),
-            )
-          ]
+            
+          
+            
+          
+         ])
         )
       );
   }
