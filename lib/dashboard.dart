@@ -274,6 +274,7 @@ class _DashboardState extends State<Dashboard>
                                             return tituloItem(item,_screenRotate());
                                   },
                                   isExpanded: item.isExpanded,
+                                  canTapOnHeader: true,
                                   body: cuerpoItem(item),
                                    );
                               }

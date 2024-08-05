@@ -29,7 +29,7 @@ class _DataControlState extends State<DataControl> {
    //Map<dynamic, dynamic>? registros;
    List<dynamic>? registros;
    List<ExpansionRegistro>? listRegistros;
-   late List<String> fechasReg;
+   late List<ExpansionFechas> fechasReg;
    late List<String> horasReg;
    
    int i=0;
@@ -108,18 +108,19 @@ class _DataControlState extends State<DataControl> {
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
                                   
-                                    listRegistros?[index].isExpanded =!listRegistros![index].isExpanded;
+                                   fechasReg[index].isExpanded =!fechasReg[index].isExpanded;
                                   
                                   
                                 });
                               },
-                              children: listRegistros!.map((ExpansionRegistro item) {
+                              children: fechasReg.map((ExpansionFechas item) {
                                 return ExpansionPanel(
                                   headerBuilder: (BuildContext context, bool isExpanded){
                                             return tituloRegis(item,_screenRotate());
                                   },
-                                  isExpanded: item.isExpanded,
-                                  body: cuerpoRegis(item),
+                                 isExpanded: item.isExpanded,
+                                 
+                                  body: cuerpoRegis(item,listRegistros!.where((ExpansionRegistro e) => e.fecha==item.fecha).toList()),
                                    );
                               }
                             ).toList(), ):const Text('Por el momento no hay Registro'),
@@ -133,8 +134,69 @@ class _DataControlState extends State<DataControl> {
    
     
    }
+Widget tituloRegis(ExpansionFechas item,bool rotate){
+  return TextButton(
+    style: TextButton.styleFrom(
+              textStyle: const TextStyle(
+                height: 2,
+                fontFamily: 'Arial',
+                fontSize: 20,
+                color: Color.fromARGB(255, 2, 138, 250),
+                fontWeight: FontWeight.w500,
+              ),
+           ),
+    onPressed: () {  Alert(
+        context: context,
+        type:AlertType.warning,
+        title:'Grafica de registro',
+        desc: 'Pagina en construccion',
+        buttons: [DialogButton(
+        onPressed:()=>Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "OK",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )]
+        ).show();},
+    child: Text(item.fecha));//Text(item.fecha ,style: const TextStyle(fontSize: 20),);
+  }
+Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
+  
+  return  
+                             ExpansionPanelList(
+                              expansionCallback: (int index, isExpanded) {
+                                setState(() {
+                                  
+                                   sublist[index].isExpanded =!sublist[index].isExpanded;
+                                  
+                                  
+                                });
+                              },
+                              children: sublist.map((ExpansionRegistro item) {
+                                return ExpansionPanel(
+                                  headerBuilder: (BuildContext context, bool isExpanded){
+                                            return Text(item.hora); // falta poner estilos
+                                  },
+                                 isExpanded: item.isExpanded,
+                                  body: Column(children: [
+                                    Text('CO: ${item.co}'),
+                                    Text('CO2: ${item.co2}'),
+                                    Text('HCHO: ${item.hcho}'),
+                                    Text('PM10: ${item.pm_10}'),
+                                    Text('PM2.5: ${item.pm_25}'),
+                                    Text('Temperatura: ${item.temp}'),
+                                    Text('Humedad: ${item.hum}'),
+
+                                  ],),
+                                   );
+                              }
+                            ).toList(),
+                            );
+                           
+}
   bool _createListTimes(){
-    if(registros!=null){
+    if(registros!=null){ // Agrego el primer registro para inicializar la lista
       ExpansionRegistro first= ExpansionRegistro(
                                         hora:timeFormatTime(registros?.first['TimeStamp']),
                                         fecha:timeFormatDate(registros?.first['TimeStamp']),
@@ -146,8 +208,9 @@ class _DataControlState extends State<DataControl> {
                                         hcho:1.0*registros?.first['HCHO'],
                                         co2:1.0*registros?.first['CO2'],);
     listRegistros =[first];
+    fechasReg = [ExpansionFechas(fecha:first.fecha)];
     registros?.forEach((dynamic element) {
-      if(element!=registros?.first){
+      if(element!=registros?.first){  // agrego cada registro a la lista
         try{        
           ExpansionRegistro item = ExpansionRegistro(
                                         hora:timeFormatTime(element['TimeStamp']),
@@ -161,6 +224,11 @@ class _DataControlState extends State<DataControl> {
                                         co2:1.0*element['CO2'],
                                         );
           listRegistros?.add(item);
+          for(int i=0; i<fechasReg.length;i++){  // Agrego las diferentes fechas a la lista.
+            if(fechasReg[i].fecha!=item.fecha){
+              fechasReg.add(ExpansionFechas(fecha: item.fecha));
+            }
+          }
           }catch(e){
      // print('Error al agregar registro a la lista: $e');
         }
@@ -266,6 +334,11 @@ class ExpansionRegistro{
    String hora;
   ExpansionRegistro({ required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
   }
+class ExpansionFechas{
+  bool isExpanded;
+  final String fecha;
+  ExpansionFechas({required this.fecha,this.isExpanded=false});
+}
 Widget tituloItem(ExpansionItem item,bool rotate){
   Icon iconState = const Icon(Icons.abc,size: 0,);
   double status = item.currval/item.maxvalue;
@@ -287,12 +360,8 @@ Widget tituloItem(ExpansionItem item,bool rotate){
                   ]
                );
 }
-Widget tituloRegis(ExpansionRegistro item,bool rotate){
-  return  Text(item.fecha ,style: const TextStyle(fontSize: 20),);
-}
-Widget cuerpoRegis(ExpansionRegistro item){
-  return  Text(item.hora ,style: const TextStyle(fontSize: 20),);
-}
+
+
 Widget cuerpoItem(ExpansionItem item){
 String path = 'assets/images/Status1.png';
 double status = item.currval/item.maxvalue;
