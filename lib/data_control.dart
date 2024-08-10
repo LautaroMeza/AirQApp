@@ -3,11 +3,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'line_chart_card.dart';
 import 'main.dart';
 
 class DataControl extends StatefulWidget{
@@ -37,18 +40,6 @@ class _DataControlState extends State<DataControl> {
 @override
   void initState(){
     super.initState();
-    
-  /*  databaseReference
-          .child('Registros/$i')
-          .onValue.listen((event) {
-      if(event.snapshot.exists){
-            registros= event.snapshot.value as Map<dynamic, dynamic>;
-          }else{
-            registros= null;
-          }
-       }
-     );*/
-
            databaseReference
           .child('Registros')
           .onValue.listen((event) {
@@ -63,7 +54,7 @@ class _DataControlState extends State<DataControl> {
    
     }
   @override
-  Widget build(BuildContext context) {
+Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
@@ -102,8 +93,7 @@ class _DataControlState extends State<DataControl> {
           ],
         ),
           ),
-      body: //Center(child:isLoading?Text((registros!=null)?registros.toString():'Sin datos'):const Text('Cargando')));
-            Center(child: isLoading?ListView(children: [
+      body:Center(child: isLoading?ListView(children: [
                                   !isEmpty?ExpansionPanelList(
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
@@ -151,7 +141,7 @@ Widget tituloRegis(ExpansionFechas item,bool rotate){
         title:'Grafica de registro',
         desc: 'Pagina en construccion',
         buttons: [DialogButton(
-        onPressed:()=>Navigator.pop(context),
+        onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LineChartCard(data:listRegistros,))),//Navigator.pop(context),
           width: 120,
           child: const Text(
             "OK",
@@ -197,7 +187,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
 }
   bool _createListTimes(){
     if(registros!=null){ // Agrego el primer registro para inicializar la lista
-      ExpansionRegistro first= ExpansionRegistro(
+      ExpansionRegistro first= ExpansionRegistro(                                        
                                         hora:timeFormatTime(registros?.first['TimeStamp']),
                                         fecha:timeFormatDate(registros?.first['TimeStamp']),
                                         co:1.0*registros?.first['CO'],
@@ -212,7 +202,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
     registros?.forEach((dynamic element) {
       if(element!=registros?.first){  // agrego cada registro a la lista
         try{        
-          ExpansionRegistro item = ExpansionRegistro(
+          ExpansionRegistro item = ExpansionRegistro(                                      
                                         hora:timeFormatTime(element['TimeStamp']),
                                         fecha:timeFormatDate(element['TimeStamp']),
                                         co:1.0*element['CO'],
@@ -243,7 +233,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
     }
   _handleHome(){
     //Navigator.of(context).pushReplacement(  
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>const Dashboard()),ModalRoute.withName('/'),);
+    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const Dashboard()));
     }
   _handleRegistro(){
     Navigator.pop(context);
@@ -311,7 +301,7 @@ String timeFormatDate(int timestamp){
     return DateFormat('dd-MM-yyyy').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false)); 
   }
 String timeFormatTime(int timestamp){   
-    return DateFormat('HH:mm:ss').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false));     
+    return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false));     
   }
 class ExpansionItem{
   bool isExpanded;
@@ -332,7 +322,8 @@ class ExpansionRegistro{
   final double co2;
    String fecha;
    String hora;
-  ExpansionRegistro({ required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
+
+  ExpansionRegistro({required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
   }
 class ExpansionFechas{
   bool isExpanded;
@@ -360,8 +351,6 @@ Widget tituloItem(ExpansionItem item,bool rotate){
                   ]
                );
 }
-
-
 Widget cuerpoItem(ExpansionItem item){
 String path = 'assets/images/Status1.png';
 double status = item.currval/item.maxvalue;
@@ -404,4 +393,27 @@ double status = item.currval/item.maxvalue;
                                     ],), 
                                     ],
                             );
+}
+
+class DataGrap  extends StatelessWidget{
+  final List<ExpansionRegistro>? listRegistros;
+const DataGrap({super.key,required this.listRegistros});
+
+   //Map<dynamic,dynamic> regCO = {listRegistros.first.hora:listRegistros.first.co};
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(child:     
+    SfCartesianChart(
+      primaryXAxis: DateTimeAxis(),
+      series:<CartesianSeries>[
+        LineSeries<ExpansionRegistro,DateTime>(
+          dataSource: listRegistros!,
+          xValueMapper: (ExpansionRegistro item, _)=> DateTime.parse(item.hora),
+          yValueMapper: (ExpansionRegistro item, _)=> item.temp,
+          )
+      ]
+    )
+    );
+  }
+
 }
