@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -135,20 +137,8 @@ Widget tituloRegis(ExpansionFechas item,bool rotate){
                 fontWeight: FontWeight.w500,
               ),
            ),
-    onPressed: () {  Alert(
-        context: context,
-        type:AlertType.warning,
-        title:'Grafica de registro',
-        desc: 'Pagina en construccion',
-        buttons: [DialogButton(
-        onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> LineChartCard(data:listRegistros,))),//Navigator.pop(context),
-          width: 120,
-          child: const Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        )]
-        ).show();},
+    onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DataGrap(listRegistros:listRegistros,))),//Navigator.pop(context),
+
     child: Text(item.fecha));//Text(item.fecha ,style: const TextStyle(fontSize: 20),);
   }
 Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
@@ -169,8 +159,16 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
                                             return Text(item.hora); // falta poner estilos
                                   },
                                  isExpanded: item.isExpanded,
-                                  body: Column(children: [
-                                    Text('CO: ${item.co}'),
+                                  body: Column(                                   
+                                  
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      children: [
+                                    Container(decoration:const  BoxDecoration(color: Colors.black),child:Text('CO: ${item.co}',style: const TextStyle(color:Colors.white),)),
+                                    Container(decoration:const  BoxDecoration(color: Colors.black),child:Text('CO2: ${item.co2}',style: const TextStyle(color:Colors.white),)),
+                                    ],),
                                     Text('CO2: ${item.co2}'),
                                     Text('HCHO: ${item.hcho}'),
                                     Text('PM10: ${item.pm_10}'),
@@ -188,6 +186,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
   bool _createListTimes(){
     if(registros!=null){ // Agrego el primer registro para inicializar la lista
       ExpansionRegistro first= ExpansionRegistro(                                        
+                                        hour: DateTime.fromMillisecondsSinceEpoch(registros?.first['TimeStamp'] * 1000, isUtc: false),
                                         hora:timeFormatTime(registros?.first['TimeStamp']),
                                         fecha:timeFormatDate(registros?.first['TimeStamp']),
                                         co:1.0*registros?.first['CO'],
@@ -202,7 +201,8 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
     registros?.forEach((dynamic element) {
       if(element!=registros?.first){  // agrego cada registro a la lista
         try{        
-          ExpansionRegistro item = ExpansionRegistro(                                      
+          ExpansionRegistro item = ExpansionRegistro(      
+                                        hour: DateTime.fromMillisecondsSinceEpoch(element['TimeStamp'] * 1000, isUtc: false),                           
                                         hora:timeFormatTime(element['TimeStamp']),
                                         fecha:timeFormatDate(element['TimeStamp']),
                                         co:1.0*element['CO'],
@@ -320,10 +320,11 @@ class ExpansionRegistro{
   final double hcho;
   final double co;
   final double co2;
+   DateTime hour;
    String fecha;
    String hora;
 
-  ExpansionRegistro({required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
+  ExpansionRegistro({required this.hour,required this.fecha, required this.hora,this.isExpanded=false,required this.co,required this.temp, required this.hum, required this.pm_10, required this.pm_25, required this.hcho, required this.co2,}); 
   }
 class ExpansionFechas{
   bool isExpanded;
@@ -398,22 +399,104 @@ double status = item.currval/item.maxvalue;
 class DataGrap  extends StatelessWidget{
   final List<ExpansionRegistro>? listRegistros;
 const DataGrap({super.key,required this.listRegistros});
-
+      
    //Map<dynamic,dynamic> regCO = {listRegistros.first.hora:listRegistros.first.co};
+   
   @override
   Widget build(BuildContext context) {
-    return PopScope(child:     
-    SfCartesianChart(
-      primaryXAxis: DateTimeAxis(),
-      series:<CartesianSeries>[
-        LineSeries<ExpansionRegistro,DateTime>(
-          dataSource: listRegistros!,
-          xValueMapper: (ExpansionRegistro item, _)=> DateTime.parse(item.hora),
-          yValueMapper: (ExpansionRegistro item, _)=> item.temp,
-          )
-      ]
-    )
-    );
+    return PopScope(child:SingleChildScrollView(
+      child:SafeArea( child:Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [   
+        _createGraph(0),
+        _createGraph(1),
+        _createGraph(2),
+        _createGraph(3),
+        _createGraph(4),
+        _createGraph(5),
+        _createGraph(6),
+    ]
+    )))
+   );
+    
   }
 
+Widget _createGraph(int index){
+  String text ="";
+  String unidad="";
+  switch (index) {
+      case 0:
+      text = 'Temperatura';
+      unidad = '°C';
+      break;                                        
+      case 1:
+      text = 'Humedad';
+      unidad = '%';
+      break;                                                                                
+      case 2:         
+      text = 'Monoxido de Carbono';
+      unidad = 'ppm';
+      break;                                                                       
+      case 3: 
+      text = 'Dioxido de Carbono';
+      unidad = 'ppm';
+      break;                                                                    
+      case 4:         
+      text = 'Particulas PM 10';
+      unidad = 'ppm';
+      break;
+      case 5:         
+      text = 'Particulas PM 2.5';
+      unidad = 'ppm';
+      break;                                                                 
+    default:         
+      text = 'Formaldehido';
+      unidad = 'ppm';
+      break;
+  }
+  return SfCartesianChart(
+      onTooltipRender: ((tooltipArgs) =>tooltipArgs.text= '${tooltipArgs.text} $unidad'),
+      zoomPanBehavior: ZoomPanBehavior(enablePinching: true,),
+      primaryXAxis: DateTimeAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),interval: 5,labelStyle: const TextStyle(color: Colors.white)),
+      title: ChartTitle(alignment: ChartAlignment.center,text: text,textStyle: const TextStyle(
+                fontFamily: 'Arial',
+                fontSize: 15,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500,)),
+      primaryYAxis: NumericAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),labelStyle:const TextStyle(color: Colors.white) ,title: AxisTitle(text: '[ppm]',alignment: ChartAlignment.center,textStyle:const TextStyle(color:Colors.white))),
+      plotAreaBorderWidth: 0,
+      tooltipBehavior: TooltipBehavior(enable: true),
+      series:<CartesianSeries>[
+        AreaSeries<ExpansionRegistro,DateTime>(
+          color: Colors.grey[400],
+          enableTooltip: true,
+          name: text, 
+          opacity: 0.3,
+          borderWidth: 2,
+          borderColor: Colors.blueGrey[600],
+          dataSource: listRegistros!,
+          xValueMapper: (ExpansionRegistro item, _)=> item.hour,
+          yValueMapper: (ExpansionRegistro item, _){
+                            switch (index) {
+                                        case 0:
+                                        return item.temp;                                        
+                                        case 1:
+                                        return item.hum;                                                                                
+                                        case 2:         
+                                        return item.co;                                                                       
+                                        case 3: 
+                                        return item.co2;                                                                    
+                                        case 4:         
+                                        return item.pm_10;                                                                  
+                                        case 5:
+                                        return item.pm_25;
+                                        default:
+                                        return item.hcho;
+                                    }
+                                  } ,
+          ),
+      ]
+     );
+}
 }

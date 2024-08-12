@@ -63,7 +63,6 @@ class LineChartCard extends StatelessWidget {
                   handleBuiltInTouches: true,
                 ),
                 gridData: const FlGridData(show:true,drawHorizontalLine: true),
-
                 titlesData:  FlTitlesData(
                   show:  true,
                 rightTitles: const  AxisTitles(
@@ -74,6 +73,7 @@ class LineChartCard extends StatelessWidget {
                   ),
                   bottomTitles: AxisTitles(
                     axisNameSize: 10,
+                    
                     sideTitles: SideTitles(
                       showTitles: true,
                       reservedSize: 50,
@@ -83,43 +83,12 @@ class LineChartCard extends StatelessWidget {
                                                                  
                   ),
                   leftTitles: const AxisTitles(),
-                  
-                 /* bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      showTitles: true,
-                      getTitlesWidget: (double value, TitleMeta meta) {
-                        return data[value.toInt()] != null
-                            ? SideTitleWidget(
-                                axisSide: meta.axisSide,
-                                child: Text(
-                                    data.bottomTitle[value.toInt()].toString(),
-                                    style: TextStyle(
-                                        fontSize: 12, color: Colors.grey[400])),
-                              )
-                            : const SizedBox();
-                      },
-                    ),
-                  ),*/
-                /*  leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                      getTitlesWidget: (double value, TitleMeta meta) {
-                        return data.leftTitle[value.toInt()] != null
-                            ? Text(data.leftTitle[value.toInt()].toString(),
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.grey[400]))
-                            : const SizedBox();
-                      },
-                      showTitles: true,
-                      interval: 1,
-                      reservedSize: 40,
-                    ),
-                  ),*/
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
                   LineChartBarData(
                     color: selectionColor,
-                    barWidth: 2.5,
+                    barWidth: 2.5,                    
                     belowBarData: BarAreaData(
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -135,7 +104,6 @@ class LineChartCard extends StatelessWidget {
                     spots:spot,
                   )
                 ],
-
               ),
             ),
           ),
@@ -147,10 +115,12 @@ class LineChartCard extends StatelessWidget {
 Widget bottomTitleWidgets(double value, TitleMeta meta) {
     const style = TextStyle(
       fontSize: 10,
+      color:Colors.grey,
       fontWeight: FontWeight.bold,
     );
+    
     String text =  (value+0.002).toString();
-    text = text.replaceFirst(RegExp('r.'), ':').replaceRange(5, text.length,'');
+    text = text.replaceFirst(RegExp('.'), ':',2).replaceRange(5, text.length,'');
       return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 4,
