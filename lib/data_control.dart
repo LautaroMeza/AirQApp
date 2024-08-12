@@ -3,16 +3,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-import 'line_chart_card.dart';
 import 'main.dart';
 
 class DataControl extends StatefulWidget{
@@ -95,8 +93,13 @@ Widget build(BuildContext context) {
           ],
         ),
           ),
-      body:Center(child: isLoading?ListView(children: [
+      body:Center(child: isLoading?ListView(
+                              
+                              children: [
                                   !isEmpty?ExpansionPanelList(
+                                    
+                                    dividerColor: Colors.grey,
+                                    expandIconColor: Colors.white,
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
                                   
@@ -107,6 +110,8 @@ Widget build(BuildContext context) {
                               },
                               children: fechasReg.map((ExpansionFechas item) {
                                 return ExpansionPanel(
+                                  backgroundColor: Colors.black,
+
                                   headerBuilder: (BuildContext context, bool isExpanded){
                                             return tituloRegis(item,_screenRotate());
                                   },
@@ -139,12 +144,20 @@ Widget tituloRegis(ExpansionFechas item,bool rotate){
            ),
     onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DataGrap(listRegistros:listRegistros,))),//Navigator.pop(context),
 
-    child: Text(item.fecha));//Text(item.fecha ,style: const TextStyle(fontSize: 20),);
+    child: Text(item.fecha,style: const TextStyle(color: Colors.white),));//Text(item.fecha ,style: const TextStyle(fontSize: 20),);
   }
 Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
-  
+  Widget dataBox(String mag,String unidad,double item){
+    return Container(
+      height: 50,
+      decoration:  BoxDecoration(border:Border.all(color: Colors.white,style: BorderStyle.solid,width: 0.7), color: Colors.black),
+      child:Center(child: Text('$mag \n  $item $unidad',textAlign:TextAlign.center,style: const TextStyle(color:Colors.white),)));
+
+  }
   return  
                              ExpansionPanelList(
+                              dividerColor: const Color.fromARGB(255, 190, 177, 177),
+                              expandIconColor: Colors.white,
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
                                   
@@ -155,26 +168,40 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
                               },
                               children: sublist.map((ExpansionRegistro item) {
                                 return ExpansionPanel(
+                                  backgroundColor: Colors.black,
                                   headerBuilder: (BuildContext context, bool isExpanded){
-                                            return Text(item.hora); // falta poner estilos
+                                            return Padding(padding:const  EdgeInsets.only(top:15,bottom: 0,left: 7),child:Text(item.hora, textAlign: TextAlign.start,style: const TextStyle(color: Colors.white,fontSize: 20),)); // falta poner estilos
                                   },
                                  isExpanded: item.isExpanded,
-                                  body: Column(                                   
+                                  body: Column(                        
                                   
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                   
                                     children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                   
+                                      Row(
                                       children: [
-                                    Container(decoration:const  BoxDecoration(color: Colors.black),child:Text('CO: ${item.co}',style: const TextStyle(color:Colors.white),)),
-                                    Container(decoration:const  BoxDecoration(color: Colors.black),child:Text('CO2: ${item.co2}',style: const TextStyle(color:Colors.white),)),
+                                          Expanded(child:dataBox('Temperatura', '°C', item.temp),),                                        
+                                          Expanded(child:dataBox('Humedad', '%', item.hum),)
                                     ],),
-                                    Text('CO2: ${item.co2}'),
-                                    Text('HCHO: ${item.hcho}'),
-                                    Text('PM10: ${item.pm_10}'),
-                                    Text('PM2.5: ${item.pm_25}'),
-                                    Text('Temperatura: ${item.temp}'),
-                                    Text('Humedad: ${item.hum}'),
+                                    
+                                   
+                                    Row(
+                                      children: [
+                                        Expanded(child: dataBox('Monoxido de carbono','ppm', item.co),),
+                                        Expanded(child:dataBox('Dioxido de carbono', 'ppm', item.co2),),
+                                    ],),
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Expanded(child: dataBox('PM 10','ppm', item.pm_10),),
+                                        Expanded(child: dataBox('PM 2.5','ppm', item.pm_25),),
+                                    ],),                                    
+                                    Row(
+                                      children: [
+                                        Expanded(child: dataBox('Formaldehido','ppm', item.hcho))
+                                    //const Spacer()
+                                    ],),
 
                                   ],),
                                    );

@@ -176,9 +176,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-
-
-
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn =  GoogleSignIn(
     scopes: <String>['email'],  
@@ -245,7 +242,12 @@ Future<void> _handleSignIn() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Google Sign in'),),
+      appBar: AppBar(
+        leading:Container(
+          height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height*0.1, // maximum item width
+          width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.2: MediaQuery.of(context).size.height*0.1, // maximum item width
+           decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.contain),shape: BoxShape.rectangle),),
+           title: const Text('Google Sign in'),),
       body: Center(
          child:Column(
           mainAxisAlignment: (MediaQuery.of(context).orientation == Orientation.portrait)?MainAxisAlignment.center:MainAxisAlignment.start,
@@ -270,7 +272,8 @@ Future<void> _handleSignIn() async {
             
           
          ])
-        )
+        ),
+        bottomSheet: const Text('Meza Lautaro & Ré Boris',style: TextStyle(fontSize: 20,fontStyle: FontStyle.italic,fontFamily: 'Times New Roman'),),
       );
   }
 }
