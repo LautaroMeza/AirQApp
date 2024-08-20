@@ -22,19 +22,6 @@ class _DashboardState extends State<Dashboard>
 
    final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
-/*
-  late AnimationController progressController;
-  late Animation<double> tempAnimation;
-  late Animation<double> humidityAnimation; 
-  late Animation<double> dioxAnimation;
-  late Animation<double> monoxAnimation; 
-  late Animation<double> hchoAnimation;
-  late Animation<double> pm10Animation; 
-  late Animation<double> pm25Animation; */
-  
-  /*late ValueNotifier<double> dataexample;
-  late ValueNotifier<double> dataexample1;
-  late ValueNotifier<double> dataexample2;*/
   late List<ExpansionItem> lista;
   late List<bool> oldExpandState;
        int data =0 ;
@@ -49,14 +36,6 @@ class _DashboardState extends State<Dashboard>
   if(event.snapshot.exists){
 
   jsonData=  event.snapshot.value as Map<dynamic, dynamic>;
-   /* if(jsonData ==null || jsonData != curr){
-      jsonData = curr;
-    }
-
-  dataexample = ValueNotifier((curr['Temperatura'])/(50)) ; // estos son para marcar el nivel, puede irse tal vez
-  dataexample1 = ValueNotifier((curr['Humedad'])/(100)) ;
-  dataexample2 = ValueNotifier((curr['CO2'])/(2000)) ;
-    //_dashboardInit(curr,jsonData);*/
   setState(() {    
     if(isLoading){
         oldExpandState=[
@@ -103,61 +82,6 @@ class _DashboardState extends State<Dashboard>
 
   }
 
-/*
-  _dashboardInit(Map<dynamic,dynamic> curr, Map<dynamic,dynamic>? old){
-    progressController = AnimationController(
-      vsync: this, duration:  const Duration(milliseconds: 4500)); //5s
-
-    tempAnimation = 
-      Tween<double>(begin: old!['Temperatura'], end: curr['Temperatura']).animate(progressController)
-      ..addListener(() {setState(() {
-      });
-    });
-  
-    humidityAnimation = 
-      Tween<double>(begin: old['Humedad'], end: curr['Humedad']).animate(progressController)
-      ..addListener(() {
-        setState(() {
-      });
-    });
-    
-        dioxAnimation = 
-      Tween<double>(begin: old['CO2'], end: curr['CO2']).animate(progressController)
-      ..addListener(() {setState(() {
-      });
-    });
-
-    monoxAnimation = 
-      Tween<double>(begin: old['CO'], end: curr['CO']).animate(progressController)
-      ..addListener(() {
-        setState(() {
-      });
-    });
-
-      hchoAnimation = 
-      Tween<double>(begin: old['HCHO'], end: curr['HCHO']).animate(progressController)
-      ..addListener(() {setState(() {
-      });
-    });
-
-    pm10Animation = 
-      Tween<double>(begin: old['Humedad'], end: curr['Humedad']).animate(progressController)
-      ..addListener(() {
-        setState(() {
-      });
-    });
-     pm25Animation = 
-      Tween<double>(begin: old['Humedad'], end: curr['Humedad']).animate(progressController)
-      ..addListener(() {
-        setState(() {
-      });
-    });
-    progressController.forward();
-  
-  }
-
-*/
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,34 +155,7 @@ class _DashboardState extends State<Dashboard>
                   ]
             
             ),
-                /*GridView.count(
-                  crossAxisCount: _screenRotate()? 1:2,
-                  mainAxisSpacing:1,
-                  crossAxisSpacing: 5,
-                  padding: const EdgeInsets.all(1),
-                  childAspectRatio: 5, 
-                  children:<Widget>[
-                            Row( 
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children:<Widget> [
-                                   DataLevel(dataexample),
-                                   const Spacer(),
-                                   Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.thermostat_outlined,size: 50,)),
-                                        Text(
-                                            '${tempAnimation.value}',
-                                            style: const TextStyle(
-                                                    fontSize: 50, fontWeight: FontWeight.bold),
-                                        ),
-                                        const Text(
-                                          '°C', 
-                                          style: TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                        ),
-                                        const Spacer(),
-                            ]
-                            ),
-                            
-                            */ListView(children: [
+                ListView(children: [
                                   ExpansionPanelList(
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
@@ -282,163 +179,13 @@ class _DashboardState extends State<Dashboard>
                             ],
                             )
                             
-  /*
-                            Row( 
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children:<Widget> [
-                                    DataLevel(dataexample1),
-                                     const Spacer(flex: 2,),
-                                     Container(padding: const EdgeInsets.only(right: 10),child:const Icon(Icons.water_drop_outlined,size: 50,)),
-
-                                      Text(
-                                          '${humidityAnimation.value}',
-                                          style: const TextStyle(
-                                                  fontSize: 50, fontWeight: FontWeight.bold),
-                                      ),
-                                      const Text(
-                                        '%', 
-                                        style: TextStyle(
-                                          fontSize: 50, fontWeight: FontWeight.bold),
-                                      ),
-                                       const Spacer(flex:2),
-                                    ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:<Widget> [
-                                DataLevel(dataexample2),
-                                 const Spacer(),
-                                const Text('CO2',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
-                                Text(
-                                    '${dioxAnimation.value}',
-                                    style: const TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'ppm', 
-                                  style: TextStyle(
-                                    fontSize: 40, fontWeight: FontWeight.bold),
-                                ),
-                                 const Spacer(),
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:<Widget> [
-                                const Text('CO',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
-                                Text(
-                                    '${monoxAnimation.value}',
-                                    style: const TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'ppm', 
-                                  style: TextStyle(
-                                    fontSize: 40, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:<Widget> [
-                                  const Text('HCHO',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
-                                Text(
-                                    '${hchoAnimation.value}',
-                                    style: const TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'ppm', 
-                                  style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:<Widget> [
-                                const Text('PM10',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold),),
-                                Text(
-                                    '${pm10Animation.value}',
-                                    style: const TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'ppm', 
-                                  style: TextStyle(
-                                    fontSize: 40, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children:<Widget> [
-                                  const Text('PM2.5',style: TextStyle(fontSize: 50, fontWeight: FontWeight.bold,),),
-                                Text(
-                                    '${pm25Animation.value}',
-                                    style: const TextStyle(
-                                            fontSize: 50, fontWeight: FontWeight.bold),
-                                ),
-                                const Text(
-                                  'ppm', 
-                                  style: TextStyle(
-                                    fontSize: 30, fontWeight: FontWeight.bold),
-                                )
-                              ],
-                            ),
-*/
-           //                 ] ,
-
-           //     ),
+ 
             ],
         ) :const  Center(child:  Text('Cargando',
               style: TextStyle(
               fontSize: 30, fontWeight:  FontWeight.bold),
          )
      )),    
-  /*    bottomNavigationBar: SizedBox(
-      height: _screenRotate()? MediaQuery.of(context).size.height * 0.1:  MediaQuery.of(context).size.height * 0.2 , // altura dependiendo la orientacion
-      //width: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,
-      child: isLoading?Row(
-      
-        //maxCrossAxisExtent: _screenRotate()? MediaQuery.of(context).size.width:MediaQuery.of(context).size.width*0.5,//crossAxisCount: 5,        
-        //crossAxisCount: 5,
-        mainAxisSize: MainAxisSize.min,
-        //mainAxisAlignment: MainAxisAlignment.center,
-        children:<Widget>[
-          Container(
-            width: 45,
-            foregroundDecoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/termometro.png'),fit: BoxFit.scaleDown),shape: BoxShape.rectangle),
-          ),
-          SizedBox(
-            width: 100,
-            child: Center( child: Text(
-                    '${tempAnimation.value} °C',
-                    
-                    style: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)
-                    ))
-          ),
-          const Spacer(),
-          Container(
-            width: 50,
-            foregroundDecoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/gotadeagua.png'),fit: BoxFit.scaleDown),shape: BoxShape.rectangle),
-          ),
-          SizedBox(
-            width: 100,
-            child: Center( child: Text(
-                    '${humidityAnimation.value} %',
-                    style: const TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)
-                    ))
-          ),
-     ]
-    ):const Text('Cargando',
-              style: TextStyle(
-              fontSize: 20, fontWeight:  FontWeight.bold),
-         )
-       ),
-*/
     );
   }
   Widget _generalstatuscont(){
@@ -547,20 +294,6 @@ class _DashboardState extends State<Dashboard>
     }
   _handleRegistro(){
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const DataControl()));
-    /*  Alert(
-        context: context,
-        type:AlertType.warning,
-        title:'Registro historico',
-        desc: 'Pagina en construccion, FECHA ${dateTime(data)}',
-        buttons: [DialogButton(
-        onPressed:()=>Navigator.pop(context),
-          width: 120,
-          child: const Text(
-            "OK",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-        )]
-        ).show();*/
     }
   _handleLoginOutPopUp(){
     Alert(

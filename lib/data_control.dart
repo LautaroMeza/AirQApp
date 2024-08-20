@@ -3,9 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
-
 import 'package:flutter/material.dart';
-
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -122,8 +120,9 @@ Widget build(BuildContext context) {
                               }
                             ).toList(), ):const Text('Por el momento no hay Registro'),
                             ],
-                            ):const Text('Cargando'),
-                            ));
+                            ):const Center(child:CircularProgressIndicator(strokeCap: StrokeCap.round,strokeWidth: 5,color: Colors.blue,))
+                            )
+                            );
 
 
 
@@ -449,37 +448,45 @@ const DataGrap({super.key,required this.listRegistros});
     
   }
 
-Widget _createGraph(int index){
+Widget _createGraph(int index){ // Cambiar maxvalues.
   String text ="";
   String unidad="";
+  double maxvalue= 0;
   switch (index) {
       case 0:
       text = 'Temperatura';
       unidad = '°C';
+      maxvalue = 80;
       break;                                        
       case 1:
       text = 'Humedad';
       unidad = '%';
+      maxvalue = 120;
       break;                                                                                
       case 2:         
       text = 'Monoxido de Carbono';
       unidad = 'ppm';
+      maxvalue = 5000;
       break;                                                                       
       case 3: 
       text = 'Dioxido de Carbono';
       unidad = 'ppm';
+      maxvalue = 5000;
       break;                                                                    
       case 4:         
       text = 'Particulas PM 10';
       unidad = 'ppm';
+      maxvalue = 2000;
       break;
       case 5:         
       text = 'Particulas PM 2.5';
       unidad = 'ppm';
+      maxvalue = 2000;
       break;                                                                 
     default:         
       text = 'Formaldehido';
       unidad = 'ppm';
+      maxvalue = 2000;
       break;
   }
   return SfCartesianChart(
@@ -491,7 +498,13 @@ Widget _createGraph(int index){
                 fontSize: 15,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,)),
-      primaryYAxis: NumericAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),labelStyle:const TextStyle(color: Colors.white) ,title: AxisTitle(text: '[ppm]',alignment: ChartAlignment.center,textStyle:const TextStyle(color:Colors.white))),
+      primaryYAxis: NumericAxis(
+          majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),
+          labelStyle:const TextStyle(color: Colors.white) ,
+          title: AxisTitle(text: unidad,alignment: ChartAlignment.center,textStyle:const TextStyle(color:Colors.white)),
+          maximum: maxvalue,
+          ),
+          
       plotAreaBorderWidth: 0,
       tooltipBehavior: TooltipBehavior(enable: true),
       series:<CartesianSeries>[
