@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
+import 'package:firebaseflutter/notifications_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
@@ -27,7 +28,6 @@ class _DataControlState extends State<DataControl> {
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
 
-   //Map<dynamic, dynamic>? registros;
    List<dynamic>? registros;
    List<ExpansionRegistro>? listRegistros;
    late List<ExpansionFechas> fechasReg;
@@ -366,6 +366,7 @@ Widget tituloItem(ExpansionItem item,bool rotate){
     iconState = const Icon(Icons.warning_amber_outlined,size: 30,color: Colors.amber,);
   }else if(status>0.8){
     iconState = const Icon(Icons.dangerous_rounded,size:30,color:Colors.red,);
+    FirebaseApi().showNotification();
   }
 
   return  Row(

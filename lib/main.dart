@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:firebaseflutter/dashboard.dart';
+import 'package:firebaseflutter/notifications_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,6 +12,7 @@ import 'package:another_flushbar/flushbar.dart';
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
+
    //for web
   if(kIsWeb){
     await Firebase.initializeApp(
@@ -38,7 +40,7 @@ void main() async {
    }else {
     await Firebase.initializeApp();
   }
-  
+  await FirebaseApi().initNotifications();
   runApp(const MyApp());
 }
 
