@@ -106,7 +106,7 @@ Widget build(BuildContext context) {
                                   
                                 });
                               },
-                              children: fechasReg.map((ExpansionFechas item) {
+                              children: fechasReg.map((ExpansionFechas item) {   // FechasReg debe ser una sola por fecha formato 21-09-01
                                 return ExpansionPanel(
                                   backgroundColor: Colors.black,
 
@@ -211,6 +211,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
 }
   bool _createListTimes(){
     if(registros!=null){ // Agrego el primer registro para inicializar la lista
+      registros?.sort((a,b)=>a['TimeStamp'] > b['TimeStamp']);   // ordeno la lista por tiempos
       ExpansionRegistro first= ExpansionRegistro(                                        
                                         hour: DateTime.fromMillisecondsSinceEpoch(registros?.first['TimeStamp'] * 1000, isUtc: false),
                                         hora:timeFormatTime(registros?.first['TimeStamp']),
@@ -240,9 +241,11 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
                                         co2:1.0*element['CO2'],
                                         );
           listRegistros?.add(item);
+          bool exists = false;
           for(int i=0; i<fechasReg.length;i++){  // Agrego las diferentes fechas a la lista.
-            if(fechasReg[i].fecha!=item.fecha){
+            if(!exists && fechasReg[i].fecha!=item.fecha){
               fechasReg.add(ExpansionFechas(fecha: item.fecha));
+              exists = true;
             }
           }
           }catch(e){

@@ -7,6 +7,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+/* 
+Esta es la pagina home de mi aplicacion, se van a ver todos los datos actuales en tiempo real
+*/ 
 class Dashboard extends StatefulWidget {
   
   const Dashboard({super.key});
@@ -20,7 +23,7 @@ class _DashboardState extends State<Dashboard>
 
   bool isLoading= false;
 
-   final GoogleSignIn googleSignIn = GoogleSignIn();
+  final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
   late List<ExpansionItem> lista;
   late List<bool> oldExpandState;
