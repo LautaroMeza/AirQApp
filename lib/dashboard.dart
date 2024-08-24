@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:firebaseflutter/data_control.dart';
 import 'package:firebaseflutter/main.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import 'notifications_service.dart';
+
+
 /* 
 Esta es la pagina home de mi aplicacion, se van a ver todos los datos actuales en tiempo real
 */ 
@@ -28,11 +33,13 @@ class _DashboardState extends State<Dashboard>
   late List<ExpansionItem> lista;
   late List<bool> oldExpandState;
        int data =0 ;
-  late Map<dynamic, dynamic> jsonData;
+  late Map<dynamic, dynamic> jsonData;  // valores de sensores en tiempo real
+  late Map<dynamic, dynamic> jsonDataMax; // valores Maximos permisibles de sensores. Refiere a  valores nocivos
   @override
   void initState(){
     super.initState();
-  
+     
+    _getMaxValues();
    databaseReference
  .child('Actual')
  .onValue.listen((event) {
@@ -66,11 +73,11 @@ class _DashboardState extends State<Dashboard>
       ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: 1.0*jsonData['Temperatura'],maxvalue: 50,unidad:'°C'),
       ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 100, unidad: '%'),
       
-      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monixido de carbono', currval: 1.0*jsonData['CO2'],maxvalue: 2000,unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO'], maxvalue: 2000, unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monoxido de carbono', currval: 1.0*jsonData['CO'],maxvalue: 2000,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO2'], maxvalue: 2000, unidad: 'ppm'),
       
-      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 100,unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 100, unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 100,unidad:'ug/m3'),
+      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 100, unidad: 'ug/m3'),
       
       ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 500,unidad:'ppm'),
 
@@ -78,8 +85,8 @@ class _DashboardState extends State<Dashboard>
 
 
     isLoading = true;
-
-
+    _checkState(lista);
+ 
   }
    });
 
@@ -339,5 +346,20 @@ class _DashboardState extends State<Dashboard>
      
     
   }
-
+  
+  void _checkState(List<ExpansionItem> lista) {
+    int idNot=0;
+    for (ExpansionItem element in lista) {
+      if(element.currval > element.maxvalue){
+        idNot++;
+        FirebaseApi().showNotification(idNot,"Alerta por valor elevado",'El valor de ${element.magnitud} excede los ${element.maxvalue} ${element.unidad}');
+      }
+     }
+  }
+  void _getMaxValues() async{
+    DatabaseEvent event = await  databaseReference.child('ValoresMaximos').once();
+    if(event.snapshot.exists){
+      jsonDataMax = event.snapshot.value as Map<dynamic,dynamic>;
+    }
+  }
 }

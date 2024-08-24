@@ -168,7 +168,7 @@ Future<void> _handleSignIn() async {
             ),
          ])
         ),
-        bottomSheet: const Text('Meza Lautaro & Ré Boris',style: TextStyle(fontSize: 20,fontStyle: FontStyle.italic,fontFamily: 'Times New Roman'),),
+       // bottomSheet: const Text('Meza Lautaro & Ré Boris',style: TextStyle(fontSize: 20,fontStyle: FontStyle.italic,fontFamily: 'Times New Roman'),),
       );
   }
 }

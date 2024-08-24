@@ -211,7 +211,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
 }
   bool _createListTimes(){
     if(registros!=null){ // Agrego el primer registro para inicializar la lista
-      registros?.sort((a,b)=>a['TimeStamp'] > b['TimeStamp']);   // ordeno la lista por tiempos
+      registros?.sort((a,b)=>a['TimeStamp'] - b['TimeStamp']);   // ordeno la lista por tiempos
       ExpansionRegistro first= ExpansionRegistro(                                        
                                         hour: DateTime.fromMillisecondsSinceEpoch(registros?.first['TimeStamp'] * 1000, isUtc: false),
                                         hora:timeFormatTime(registros?.first['TimeStamp']),
@@ -365,11 +365,11 @@ Widget tituloItem(ExpansionItem item,bool rotate){
   double status = item.currval/item.maxvalue;
   if(status>0.4 && status<0.6){ 
     iconState = const Icon(Icons.info_outlined,size: 30,color: Colors.blue,);
-  }else if(status>0.6 && status<0.8){
+  }else if(status>=0.6 && status<=0.8){
     iconState = const Icon(Icons.warning_amber_outlined,size: 30,color: Colors.amber,);
   }else if(status>0.8){
     iconState = const Icon(Icons.dangerous_rounded,size:30,color:Colors.red,);
-    FirebaseApi().showNotification();
+    
   }
 
   return  Row(
@@ -479,12 +479,12 @@ Widget _createGraph(int index){ // Cambiar maxvalues.
       break;                                                                    
       case 4:         
       text = 'Particulas PM 10';
-      unidad = 'ppm';
+      unidad = 'ug/m3';
       maxvalue = 2000;
       break;
       case 5:         
       text = 'Particulas PM 2.5';
-      unidad = 'ppm';
+      unidad = 'ug/m3';
       maxvalue = 2000;
       break;                                                                 
     default:         
