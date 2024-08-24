@@ -27,7 +27,7 @@ class _DashboardState extends State<Dashboard>
      with TickerProviderStateMixin {
 
   bool isLoading= false;
-
+  StreamSubscription<DatabaseEvent>? _subscription;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
   late List<ExpansionItem> lista;
@@ -40,9 +40,9 @@ class _DashboardState extends State<Dashboard>
     super.initState();
      
     _getMaxValues();
-   databaseReference
- .child('Actual')
- .onValue.listen((event) {
+  _subscription = databaseReference
+      .child('Actual')
+      .onValue.listen((event) {
   if(event.snapshot.exists){
 
   jsonData=  event.snapshot.value as Map<dynamic, dynamic>;
@@ -70,16 +70,16 @@ class _DashboardState extends State<Dashboard>
     }
     });
     lista =[
-      ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: 1.0*jsonData['Temperatura'],maxvalue: 50,unidad:'°C'),
-      ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 100, unidad: '%'),
+      ExpansionItem(isExpanded: oldExpandState[0],magnitud: 'Temperatura', currval: 1.0*jsonData['Temperatura'],maxvalue: 1.0*jsonDataMax['Temperatura'],unidad:'°C'),
+      ExpansionItem(isExpanded: oldExpandState[1],magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 1.0*jsonDataMax['Humedad'], unidad: '%'),
       
-      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monoxido de carbono', currval: 1.0*jsonData['CO'],maxvalue: 2000,unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO2'], maxvalue: 2000, unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[2],magnitud: 'Monoxido de carbono', currval: 1.0*jsonData['CO'],maxvalue: 1.0*jsonDataMax['CO'],unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[3],magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO2'], maxvalue: 1.0*jsonDataMax['CO2'], unidad: 'ppm'),
       
-      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 100,unidad:'ug/m3'),
-      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 100, unidad: 'ug/m3'),
+      ExpansionItem(isExpanded: oldExpandState[4],magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 1.0*jsonDataMax['PM1_0'],unidad:'ug/m3'),
+      ExpansionItem(isExpanded: oldExpandState[5],magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 1.0*jsonDataMax['PM2_5'], unidad: 'ug/m3'),
       
-      ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 500,unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[6],magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 1.0*jsonDataMax['HCHO'],unidad:'ppm'),
 
     ];
 
@@ -303,6 +303,7 @@ class _DashboardState extends State<Dashboard>
       Navigator.pop(context);
     }
   _handleRegistro(){
+    _subscription?.cancel();
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const DataControl()));
     }
   _handleLoginOutPopUp(){
@@ -332,6 +333,7 @@ class _DashboardState extends State<Dashboard>
     ).show();
   }
   Future<Null> _handleSignOut() async{
+    _subscription?.cancel();
     setState(() {
       isLoading = true;
     });

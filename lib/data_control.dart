@@ -38,19 +38,10 @@ class _DataControlState extends State<DataControl> {
 @override
   void initState(){
     super.initState();
-           databaseReference
-          .child('Registros')
-          .onValue.listen((event) {
-      if(event.snapshot.exists){
-            registros= event.snapshot.value as List?; //as Map<dynamic, dynamic>;
-        setState(() { }); 
-         isEmpty = _createListTimes();
-          isLoading=true;
-           }
-        });  
-
-   
+    
+    _getRegistros();   
     }
+
   @override
 Widget build(BuildContext context) {
     return Scaffold(
@@ -243,11 +234,11 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
           listRegistros?.add(item);
           bool exists = false;
           for(int i=0; i<fechasReg.length;i++){  // Agrego las diferentes fechas a la lista.
-            if(!exists && fechasReg[i].fecha!=item.fecha){
-              fechasReg.add(ExpansionFechas(fecha: item.fecha));
+            if(fechasReg[i].fecha.compareTo(item.fecha)==0){
               exists = true;
             }
           }
+          if(!exists) {fechasReg.add(ExpansionFechas(fecha: item.fecha));}
           }catch(e){
      // print('Error al agregar registro a la lista: $e');
         }
@@ -256,6 +247,15 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
   return false;
     }else{return true;}
 
+  }
+  _getRegistros() async{
+    DatabaseEvent event = await  databaseReference.child('Registros').once();
+    if(event.snapshot.exists){
+      registros = event.snapshot.value as List?;
+      setState(() { });
+      isEmpty = _createListTimes();
+      isLoading=true;
+    }
   }
   bool _screenRotate(){
         return (MediaQuery.of(context).orientation == Orientation.portrait);
@@ -323,6 +323,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
      
     
   }
+
 
 }
 
