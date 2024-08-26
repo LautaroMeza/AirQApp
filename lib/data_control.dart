@@ -3,13 +3,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/dashboard.dart';
-import 'package:firebaseflutter/notifications_service.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
+import 'data_graph.dart';
 import 'main.dart';
 
 class DataControl extends StatefulWidget{
@@ -106,12 +105,12 @@ Widget build(BuildContext context) {
                                   },
                                  isExpanded: item.isExpanded,
                                  
-                                  body: cuerpoRegis(item,listRegistros!.where((ExpansionRegistro e) => e.fecha==item.fecha).toList()),
+                                  body: cuerpoRegis(item,listRegistros!.where((ExpansionRegistro e) => e.fecha.compareTo(item.fecha)==0).toList()),
                                    );
                               }
                             ).toList(), ):const Text('Por el momento no hay Registro'),
                             ],
-                            ):const Center(child:CircularProgressIndicator(strokeCap: StrokeCap.round,strokeWidth: 5,color: Colors.blue,))
+                            ):const Center(child:Text('Cargando',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15,),))
                             )
                             );
 
@@ -132,7 +131,7 @@ Widget tituloRegis(ExpansionFechas item,bool rotate){
                 fontWeight: FontWeight.w500,
               ),
            ),
-    onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DataGrap(listRegistros:listRegistros,))),//Navigator.pop(context),
+    onPressed:()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> DataGrap(listRegistros:listRegistros!.where((ExpansionRegistro e) => e.fecha.compareTo(item.fecha)==0).toList(),))),//Navigator.pop(context),
 
     child: Text(item.fecha,style: const TextStyle(color: Colors.white),));//Text(item.fecha ,style: const TextStyle(fontSize: 20),);
   }
@@ -334,12 +333,13 @@ String timeFormatTime(int timestamp){
     return DateFormat('HH:mm').format(DateTime.fromMillisecondsSinceEpoch(timestamp * 1000, isUtc: false));     
   }
 class ExpansionItem{
+  final int uid;
   bool isExpanded;
   final String magnitud;
   final double currval;
   final String unidad;
   final double maxvalue;
-  ExpansionItem({this.isExpanded=false,required this.magnitud,required this.currval,required this.unidad, required this.maxvalue,});
+  ExpansionItem({this.isExpanded=false,required this.uid,required this.magnitud,required this.currval,required this.unidad, required this.maxvalue,});
 }
 class ExpansionRegistro{
   bool isExpanded;
@@ -425,123 +425,4 @@ double status = item.currval/item.maxvalue;
                                     ],), 
                                     ],
                             );
-}
-
-class DataGrap  extends StatelessWidget{
-  final List<ExpansionRegistro>? listRegistros;
-const DataGrap({super.key,required this.listRegistros});
-      
-   //Map<dynamic,dynamic> regCO = {listRegistros.first.hora:listRegistros.first.co};
-   
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(child:SingleChildScrollView(
-      child:SafeArea( child:Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [   
-        _createGraph(0),
-        _createGraph(1),
-        _createGraph(2),
-        _createGraph(3),
-        _createGraph(4),
-        _createGraph(5),
-        _createGraph(6),
-    ]
-    )))
-   );
-    
-  }
-
-Widget _createGraph(int index){ // Cambiar maxvalues.
-  String text ="";
-  String unidad="";
-  double maxvalue= 0;
-  switch (index) {
-      case 0:
-      text = 'Temperatura';
-      unidad = '°C';
-      maxvalue = 80;
-      break;                                        
-      case 1:
-      text = 'Humedad';
-      unidad = '%';
-      maxvalue = 120;
-      break;                                                                                
-      case 2:         
-      text = 'Monoxido de Carbono';
-      unidad = 'ppm';
-      maxvalue = 5000;
-      break;                                                                       
-      case 3: 
-      text = 'Dioxido de Carbono';
-      unidad = 'ppm';
-      maxvalue = 5000;
-      break;                                                                    
-      case 4:         
-      text = 'Particulas PM 10';
-      unidad = 'ug/m3';
-      maxvalue = 2000;
-      break;
-      case 5:         
-      text = 'Particulas PM 2.5';
-      unidad = 'ug/m3';
-      maxvalue = 2000;
-      break;                                                                 
-    default:         
-      text = 'Formaldehido';
-      unidad = 'ppm';
-      maxvalue = 2000;
-      break;
-  }
-  return SfCartesianChart(
-      onTooltipRender: ((tooltipArgs) =>tooltipArgs.text= '${tooltipArgs.text} $unidad'),
-      zoomPanBehavior: ZoomPanBehavior(enablePinching: true,),
-      primaryXAxis: DateTimeAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),interval: 5,labelStyle: const TextStyle(color: Colors.white)),
-      title: ChartTitle(alignment: ChartAlignment.center,text: text,textStyle: const TextStyle(
-                fontFamily: 'Arial',
-                fontSize: 15,
-                color: Colors.grey,
-                fontWeight: FontWeight.w500,)),
-      primaryYAxis: NumericAxis(
-          majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),
-          labelStyle:const TextStyle(color: Colors.white) ,
-          title: AxisTitle(text: unidad,alignment: ChartAlignment.center,textStyle:const TextStyle(color:Colors.white)),
-          maximum: maxvalue,
-          ),
-          
-      plotAreaBorderWidth: 0,
-      tooltipBehavior: TooltipBehavior(enable: true),
-      series:<CartesianSeries>[
-        AreaSeries<ExpansionRegistro,DateTime>(
-          color: Colors.grey[400],
-          enableTooltip: true,
-          name: text, 
-          opacity: 0.3,
-          borderWidth: 2,
-          borderColor: Colors.blueGrey[600],
-          dataSource: listRegistros!,
-          xValueMapper: (ExpansionRegistro item, _)=> item.hour,
-          yValueMapper: (ExpansionRegistro item, _){
-                            switch (index) {
-                                        case 0:
-                                        return item.temp;                                        
-                                        case 1:
-                                        return item.hum;                                                                                
-                                        case 2:         
-                                        return item.co;                                                                       
-                                        case 3: 
-                                        return item.co2;                                                                    
-                                        case 4:         
-                                        return item.pm_10;                                                                  
-                                        case 5:
-                                        return item.pm_25;
-                                        default:
-                                        return item.hcho;
-                                    }
-                                  } ,
-          ),
-      ]
-     );
-}
 }
