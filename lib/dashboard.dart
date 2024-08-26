@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebaseflutter/data_control.dart';
 import 'package:firebaseflutter/main.dart';
 import 'package:flutter/material.dart';
@@ -71,21 +70,22 @@ class _DashboardState extends State<Dashboard>
     });
     lista =[
       ExpansionItem(isExpanded: oldExpandState[0],uid:1,magnitud: 'Temperatura', currval: 1.0*jsonData['Temperatura'],maxvalue: 1.0*jsonDataMax['Temperatura'],unidad:'°C'),
-      ExpansionItem(isExpanded: oldExpandState[1],uid:1,magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 1.0*jsonDataMax['Humedad'], unidad: '%'),
+      ExpansionItem(isExpanded: oldExpandState[1],uid:2,magnitud: 'Humedad', currval: 1.0*jsonData['Humedad'], maxvalue: 1.0*jsonDataMax['Humedad'], unidad: '%'),
       
-      ExpansionItem(isExpanded: oldExpandState[2],uid:1,magnitud: 'Monoxido de carbono', currval: 1.0*jsonData['CO'],maxvalue: 1.0*jsonDataMax['CO'],unidad:'ppm'),
-      ExpansionItem(isExpanded: oldExpandState[3],uid:1,magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO2'], maxvalue: 1.0*jsonDataMax['CO2'], unidad: 'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[2],uid:3,magnitud: 'Monoxido de carbono', currval: 1.0*jsonData['CO'],maxvalue: 1.0*jsonDataMax['CO'],unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[3],uid:4,magnitud: 'Dioxido de Carbono', currval: 1.0*jsonData['CO2'], maxvalue: 1.0*jsonDataMax['CO2'], unidad: 'ppm'),
       
-      ExpansionItem(isExpanded: oldExpandState[4],uid:1,magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 1.0*jsonDataMax['PM1_0'],unidad:'ug/m3'),
-      ExpansionItem(isExpanded: oldExpandState[5],uid:1,magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 1.0*jsonDataMax['PM2_5'], unidad: 'ug/m3'),
+      ExpansionItem(isExpanded: oldExpandState[4],uid:5,magnitud: 'Particulas PM10', currval: 1.0*jsonData['PM_10'],maxvalue: 1.0*jsonDataMax['PM1_0'],unidad:'ug/m3'),
+      ExpansionItem(isExpanded: oldExpandState[5],uid:6,magnitud: 'Particulas PM2.5', currval: 1.0*jsonData['PM2_5'], maxvalue: 1.0*jsonDataMax['PM2_5'], unidad: 'ug/m3'),
       
-      ExpansionItem(isExpanded: oldExpandState[6],uid:1,magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 1.0*jsonDataMax['HCHO'],unidad:'ppm'),
+      ExpansionItem(isExpanded: oldExpandState[6],uid:7,magnitud: 'Formalheido', currval: 1.0*jsonData['HCHO'],maxvalue: 1.0*jsonDataMax['HCHO'],unidad:'ppm'),
 
     ];
 
 
     isLoading = true;
     _checkState(lista);
+    _checkLongState(lista);
  
   }
    });
@@ -350,12 +350,83 @@ class _DashboardState extends State<Dashboard>
   }
   
   void _checkState(List<ExpansionItem> lista) {
-  
+    
     for (ExpansionItem element in lista) {
       if(element.currval >= element.maxvalue){
         FirebaseApi().showNotification(element.uid,"Alerta por valor elevado",'El valor de ${element.magnitud} excede los ${element.maxvalue} ${element.unidad} \n Por favor, ventile la habitacion y evite permanecer en ella por más de 15 minutos');
       }
      }
+  }
+  Future<void> _checkLongState(List<ExpansionItem> lista) async {
+    for (ExpansionItem element in lista) {
+      switch(element.uid){
+          case 1: if(element.currval>=30){
+
+          } break; // Temperatura
+          case 2:if(element.currval>=80){
+
+          } break; // Humedad
+          case 3:if(element.currval>=45){
+              if(await _checkAlertLongState('CO', 45)){
+                FirebaseApi().showNotification(
+                                element.uid+10,
+                                'Advertencia',
+                                '${element.magnitud} registra un valor elevado por mas de 8 horas');
+                }
+          }break;// Monoxido
+          case 4:if(element.currval>=5000){
+                if(await _checkAlertLongState('CO2', 5000)){
+                FirebaseApi().showNotification(
+                                element.uid+10,
+                                'Advertencia',
+                                '${element.magnitud} registra un valor elevado por mas de 8 horas');
+                }
+          } break;// Dioxido
+          case 5:if(element.currval>=40){
+                if(await _checkAlertLongState('PM1_0', 40)){
+                FirebaseApi().showNotification(
+                                element.uid+10,
+                                'Advertencia',
+                                '${element.magnitud} registra un valor elevado por mas de 8 horas');
+                }
+          } break;// PM10
+          case 6:if(element.currval>=100){
+                if(await _checkAlertLongState('PM2_5', 100)){
+                FirebaseApi().showNotification(
+                                element.uid+10,
+                                'Advertencia',
+                                '${element.magnitud} registra un valor elevado por mas de 8 horas');
+                }
+          } break;// PM2.5
+          case 7:if(element.currval>=1){
+                 if(await _checkAlertLongState('HCHO', 1)){
+                FirebaseApi().showNotification(
+                                element.uid+10,
+                                'Advertencia',
+                                '${element.magnitud} registra un valor elevado por mas de 8 horas');
+                }
+          }break;// HCHO
+      }
+    }
+  }
+  Future<bool> _checkAlertLongState(String id,double limitvalue) async{
+      dynamic data; // registro traido de DB
+      int overValue=0; // cantidad de veces que excede el valor maximo
+      DataSnapshot eventR = await databaseReference.child('Contador').get();  //extraigo la posicion actual del contador
+      int posEnd = eventR.value as int ;
+      int posInit= (posEnd - 16)>=0? (posEnd -16):(120 +(posEnd -16)); // posicion de inicio donde comienzo a mirar los registros. tengo 120 registros en total
+      int pos = posInit;
+      for(int i=0;i<16;i++){  //Recorro 16 registros anteriores hasta el actual
+        if(pos>=120 )pos=0;    //si el puntero se desbordo vuelvo a iniciar
+        DataSnapshot snapshot = await  databaseReference.child('Registros/$pos').get();
+         if(snapshot.exists){
+              data = snapshot.value as dynamic;
+              if(data[id] != null && data[id] >= limitvalue) overValue++; // si excede mi valor limite lo anoto
+          }
+        pos++;
+     }
+    //Verifico cuantos registros se encuentran por encima de lo deseado
+    if(overValue>=15){return true;}else{return false;}// si excede 3 veces
   }
   void _getMaxValues() async{
     DatabaseEvent event = await  databaseReference.child('ValoresMaximos').once();
