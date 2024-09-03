@@ -9,6 +9,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
 import 'notifications_service.dart';
+import 'const/constant.dart';
 
 
 /* 
@@ -58,8 +59,8 @@ class _DashboardState extends State<Dashboard>
         ];
     }else{
       oldExpandState=[
-        false,
-        false,
+        true,
+        true,
         false,
         false,
         false,
@@ -95,17 +96,18 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade100,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade100,
-        title: const Center(  child: Text('Calidad del Aire',textAlign: TextAlign.justify,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold),)),
+        backgroundColor: backgroundColor,
+        title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
       drawer: Drawer(
+        backgroundColor: backgroundColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
              const DrawerHeader(
-              decoration: BoxDecoration(color:Colors.blueGrey),
+              decoration: BoxDecoration(color:itemColor2),
               child: Text(
                 'Menu',
                 style:TextStyle(color:Colors.white, fontSize: 19),
@@ -140,7 +142,8 @@ class _DashboardState extends State<Dashboard>
               controller: ScrollController(keepScrollOffset: false),
               padding: const EdgeInsets.all(0),
               children: <Widget>[
-                Flex(
+                //_generalstatuscont(),
+               Flex(
                     direction: Axis.vertical,
                     children: [ 
                                   Flexible(
@@ -148,7 +151,7 @@ class _DashboardState extends State<Dashboard>
                                      flex: 5,
                                      child:_generalstatuscont()),
                       
-                                  Flexible(
+                                Flexible(
                                       fit: FlexFit.tight,
                                       flex:1,
                                       child:Row(
@@ -161,12 +164,13 @@ class _DashboardState extends State<Dashboard>
                                               Image.asset('assets/images/Status5.png',scale: 1.6,),
                                                    ],
                                             ) 
-                                      )       
+                                      )  
                   ]
             
             ),
                 ListView(children: [
                                   ExpansionPanelList(
+                              dividerColor: itemColor2,
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
                                   
@@ -177,6 +181,7 @@ class _DashboardState extends State<Dashboard>
                               },
                               children: lista.map((ExpansionItem item) {
                                 return ExpansionPanel(
+                                  backgroundColor: itemColor,
                                   headerBuilder: (BuildContext context, bool isExpanded){
                                             return tituloItem(item,_screenRotate());
                                   },

@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebaseflutter/const/constant.dart';
 import 'package:firebaseflutter/dashboard.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -44,17 +45,18 @@ class _DataControlState extends State<DataControl> {
   @override
 Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue.shade100,
+      backgroundColor: backgroundColor,
       appBar: AppBar(
-        backgroundColor: Colors.blue.shade100,
-        title: const Center(  child: Text('Calidad del Aire',textAlign: TextAlign.justify,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold),)),
+        backgroundColor: backgroundColor,
+        title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
-      drawer: Drawer(
-        child: ListView(
+      drawer: Drawer( 
+          backgroundColor: backgroundColor,
+          child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
              const DrawerHeader(
-              decoration: BoxDecoration(color:Colors.blueGrey),
+              decoration: BoxDecoration(color:itemColor2),
               child: Text(
                 'Menu',
                 style:TextStyle(color:Colors.white, fontSize: 19),
@@ -82,7 +84,7 @@ Widget build(BuildContext context) {
         ),
           ),
       body:Center(child: isLoading?ListView(
-                              
+                              padding: const EdgeInsets.only(top:0,bottom: 0),
                               children: [
                                   !isEmpty?ExpansionPanelList(
                                     
@@ -372,6 +374,12 @@ Widget tituloItem(ExpansionItem item,bool rotate){
     iconState = const Icon(Icons.dangerous_rounded,size:30,color:Colors.red,);
     
   }
+  if(item.magnitud.compareTo('Temperatura')==0){
+    iconState = const Icon(Icons.thermostat,size: 30,color: Colors.red,);
+  }
+  if(item.magnitud.compareTo('Humedad')==0){
+    iconState = const Icon(Icons.water_drop,size: 30,color: Colors.blue,);
+  }
 
   return  Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -379,7 +387,7 @@ Widget tituloItem(ExpansionItem item,bool rotate){
                   Text(item.magnitud ,style: const TextStyle(fontSize: 20),),
                   const Spacer(),
                   Container(padding: const EdgeInsets.only(right:5,bottom: 5),child: iconState),
-                  Text('${item.currval} ${item.unidad}',style: const TextStyle(fontSize: 15),),
+                  Text('${item.currval} ${item.unidad}',style: const TextStyle(fontSize: 15,),),
                   ]
                );
 }
@@ -397,14 +405,20 @@ double status = item.currval/item.maxvalue;
   }else if(status>0.8){
     path = 'assets/images/Status5.png';
   }
-  return  Row( 
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children:<Widget> [
-                                    Column(                                      
+  Widget statusW = Column(                        
                                       children: [
                                       const Text('Estado:', textAlign: TextAlign.center,style: TextStyle(fontSize: 15),),
                                        Image.asset(path,fit: BoxFit.contain,scale:3),
-                                    ],),                                    
+                                    ],);  
+
+
+    if(item.magnitud.compareTo('Temperatura')==0 || item.magnitud.compareTo('Humedad')==0){
+      statusW = const Spacer();
+  }
+  return  Row( 
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children:<Widget> [
+                                    statusW,                                   
                                      const Spacer(flex: 2,),
                                       Text(
                                           '${item.currval}',

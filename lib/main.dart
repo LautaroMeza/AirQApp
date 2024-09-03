@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebaseflutter/const/constant.dart';
 import 'package:firebaseflutter/dashboard.dart';
 import 'package:firebaseflutter/notifications_service.dart';
 import 'package:flutter/foundation.dart';
@@ -141,12 +142,14 @@ Future<void> _handleSignIn() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
+        backgroundColor: backgroundColor,
         leading:Container(
           height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height*0.1, // maximum item width
           width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.2: MediaQuery.of(context).size.height*0.1, // maximum item width
-           decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.contain),shape: BoxShape.rectangle),),
-           title: const Text('Google Sign in'),),
+           decoration:const BoxDecoration(color: backgroundColor,image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.contain),shape: BoxShape.rectangle),),
+           title: const  Text('\t\t \t \t \t \t \t \t   Inicio de Sesion ',textAlign: TextAlign.end,),),
       body: Center(
          child:Column(
           mainAxisAlignment: (MediaQuery.of(context).orientation == Orientation.portrait)?MainAxisAlignment.center:MainAxisAlignment.start,
@@ -154,15 +157,15 @@ Future<void> _handleSignIn() async {
              Container(
           height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.35 : MediaQuery.of(context).size.height*0.6, // maximum item width
           width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.94: MediaQuery.of(context).size.width*0.45, // maximum item width
-          decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/PortadaApp.png'),fit: BoxFit.fill),shape: BoxShape.rectangle),
+          decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/PortadaAppSf.png'),fit: BoxFit.fill),shape: BoxShape.rectangle),
         ),
           SizedBox(
             height: 50,
             width: 150,
             child: FloatingActionButton(
               onPressed:_handleSignIn,
-              backgroundColor: Colors.white60,
-              elevation: 10,
+              backgroundColor: buttonColor,
+              elevation: 7,
               child: const Text('Iniciar Sesion'),
             ),
             ),
