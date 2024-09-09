@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
 import 'data_graph.dart';
+import 'information.dart';
 import 'main.dart';
 
 class DataControl extends StatefulWidget{
@@ -44,14 +45,14 @@ class _DataControlState extends State<DataControl> {
 
   @override
 Widget build(BuildContext context) {
-    return Scaffold(
+    return PopScope(child: Scaffold(
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
         title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
       drawer: Drawer( 
-          backgroundColor: backgroundColor,
+          backgroundColor: backgroundColor2,
           child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
@@ -59,7 +60,7 @@ Widget build(BuildContext context) {
               decoration: BoxDecoration(color:itemColor2),
               child: Text(
                 'Menu',
-                style:TextStyle(color:Colors.white, fontSize: 19),
+                style:TextStyle(color:Colors.black, fontSize: 19),
               ),
               ),
               ListTile(
@@ -74,6 +75,18 @@ Widget build(BuildContext context) {
               selectedColor: Colors.blueGrey,
               onTap: _handleRegistro,
               ),
+               ListTile(
+              leading:  const Icon(Icons.info_outline_rounded),
+              title:  const Text('Informacion'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleInfo,
+            ),
+               ListTile(
+              leading:  const Icon(Icons.question_mark_outlined),
+              title:  const Text('Acerca De'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleAcercaDe,
+               ),
                ListTile(
               leading:  const Icon(Icons.logout_sharp),
               title:  const Text('Cerrar Sesión'),
@@ -114,7 +127,7 @@ Widget build(BuildContext context) {
                             ],
                             ):const Center(child:Text('Cargando',style: TextStyle(fontWeight: FontWeight.w500,fontSize: 15,),))
                             )
-                            );
+                            ));
 
 
 
@@ -282,6 +295,12 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
           ),
         )]
         ).show();*/
+    }
+    _handleAcercaDe(){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const AcercaDe()));
+    }
+    _handleInfo(){
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const InformationPage()));
     }
   _handleLoginOutPopUp(){
     Alert(

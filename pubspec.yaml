@@ -80,6 +80,7 @@ flutter:
   assets:
 
   - assets/images/UTNLOGO.png
+  - assets/images/UTNLOGO2.png
  # - assets/images/termometro.png
  # - assets/images/gotadeagua.png
   - assets/images/Status1.png

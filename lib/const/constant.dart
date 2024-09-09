@@ -3,10 +3,11 @@ import 'package:flutter/material.dart';
 const cardBackgroundColor = Color(0xFF21222D);
 const primaryColor = Color(0xFF2697FF);
 const secondaryColor = Color(0xFFFFFFFF);
-const backgroundColor = Color.fromARGB(255, 210, 255, 180);
+var  backgroundColor = const Color.fromARGB(255, 210, 255, 180);
+const backgroundColor2 =  Color.fromARGB(255, 210, 255, 180);
 const buttonColor = Color.fromARGB(150, 180, 255, 220);
 const  itemColor = Color.fromARGB(255, 246, 252, 136);
-const  itemColor2 = Color.fromARGB(198, 115, 20, 192);
+const  itemColor2 = Color.fromARGB(255, 246, 252, 136);
 const selectionColor = Color(0xFF88B2AC);
 
 const defaultPadding = 15.0;
@@ -35,3 +36,4 @@ const defaultPadding = 15.0;
 #define STRONG_ORANGE  0xFFA0
 #define tukson 0xB8675D
  */
+

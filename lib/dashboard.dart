@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebaseflutter/data_control.dart';
+import 'package:firebaseflutter/information.dart';
 import 'package:firebaseflutter/main.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -27,6 +28,7 @@ class _DashboardState extends State<Dashboard>
      with TickerProviderStateMixin {
 
   bool isLoading= false;
+  double ratiomax =0;
   StreamSubscription<DatabaseEvent>? _subscription;
   final GoogleSignIn googleSignIn = GoogleSignIn();
   final databaseReference = FirebaseDatabase.instance.ref();
@@ -102,15 +104,17 @@ class _DashboardState extends State<Dashboard>
         title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
       drawer: Drawer(
-        backgroundColor: backgroundColor,
+        backgroundColor: backgroundColor2,
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
              const DrawerHeader(
               decoration: BoxDecoration(color:itemColor2),
+              margin: EdgeInsets.only(bottom: 10),
+              curve: Curves.bounceIn,
               child: Text(
                 'Menu',
-                style:TextStyle(color:Colors.white, fontSize: 19),
+                style:TextStyle(color:Colors.black, fontSize: 19),
               ),
               ),
               ListTile(
@@ -125,6 +129,18 @@ class _DashboardState extends State<Dashboard>
               selectedColor: Colors.blueGrey,
               onTap: _handleRegistro,
               ),
+               ListTile(
+              leading:  const Icon(Icons.info_outline_rounded),
+              title:  const Text('Informacion'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleInfo,
+            ),
+               ListTile(
+              leading:  const Icon(Icons.question_mark_outlined),
+              title:  const Text('Acerca De'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleAcercaDe,
+               ),
                ListTile(
               leading:  const Icon(Icons.logout_sharp),
               title:  const Text('Cerrar Sesión'),
@@ -207,6 +223,7 @@ class _DashboardState extends State<Dashboard>
   
 
     List <GaugeRange> buildrange(){
+   
         return <GaugeRange>[
           GaugeRange(
             startValue: 0,
@@ -225,13 +242,15 @@ class _DashboardState extends State<Dashboard>
                       ),
                    ];
     }
-    double ratiomax =lista.first.currval/lista.first.maxvalue;
+    ratiomax=0;
       lista.map((e) {
         if(ratiomax<e.currval/e.maxvalue){
+          if(!(e.magnitud.compareTo('Temperatura')==0 || e.magnitud.compareTo('Humedad')==0)) {
             ratiomax =e.currval/e.maxvalue;
+          }
         }
       },).toList();
-      
+      setBackgroundColor();
     return SfRadialGauge(
       //title: const GaugeTitle(text:'Estado del aire',textStyle: TextStyle(fontWeight: FontWeight.bold,fontSize:20)),
       enableLoadingAnimation: true,
@@ -301,6 +320,18 @@ class _DashboardState extends State<Dashboard>
                 ]);
     
   }
+  Color setBackgroundColor(){
+    if(ratiomax>0.9){
+      backgroundColor = Colors.redAccent.shade100;
+    }else if(ratiomax>0.7){
+      backgroundColor = Colors.orangeAccent.shade200;
+    }else if(ratiomax>0.4){
+      backgroundColor = const  Color.fromARGB(255, 210, 255, 180);
+    }else if(ratiomax>0.2){
+      backgroundColor= const  Color.fromARGB(255,167,255,200);
+    }
+    return backgroundColor;
+  }
   bool _screenRotate(){
         return (MediaQuery.of(context).orientation == Orientation.portrait);
     }
@@ -310,6 +341,14 @@ class _DashboardState extends State<Dashboard>
   _handleRegistro(){
     _subscription?.cancel();
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const DataControl()));
+    }
+  _handleAcercaDe(){
+          _subscription?.cancel();
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const AcercaDe()));
+    }
+  _handleInfo(){
+          _subscription?.cancel();
+    Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const InformationPage()));
     }
   _handleLoginOutPopUp(){
     Alert(

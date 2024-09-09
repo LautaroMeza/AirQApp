@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:firebaseflutter/const/constant.dart';
 import 'package:firebaseflutter/dashboard.dart';
+import 'package:firebaseflutter/data_control.dart';
+import 'package:firebaseflutter/information.dart';
 import 'package:firebaseflutter/notifications_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +62,11 @@ class MyApp extends StatelessWidget {
        home: const LoginScreen(title: 'Inicio de Sesion'),
   
       routes: {
-        '/home':(context) => const LoginScreen(title: 'Flutter Demo Home Page'),
+        '/home':(context) => const Dashboard(),
+        '/registro':(context)=> const DataControl(),
+        '/login':(context)=> const LoginScreen(title:'Inicio de Sesion'),
+        '/informacion':(context)=> const InformationPage(),
+        '/acercaDe':(context)=> const AcercaDe(),
               },
     );
   }
@@ -142,23 +148,38 @@ Future<void> _handleSignIn() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
+      backgroundColor: backgroundColor2,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
+        backgroundColor: backgroundColor2,
         leading:Container(
           height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.15 : MediaQuery.of(context).size.height*0.1, // maximum item width
           width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.2: MediaQuery.of(context).size.height*0.1, // maximum item width
-           decoration:const BoxDecoration(color: backgroundColor,image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.contain),shape: BoxShape.rectangle),),
+           decoration:const BoxDecoration(color: backgroundColor2,image:   DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.contain),shape: BoxShape.rectangle),),
            title: const  Text('\t\t \t \t \t \t \t \t   Inicio de Sesion ',textAlign: TextAlign.end,),),
       body: Center(
+         child:Padding(padding: (MediaQuery.of(context).orientation == Orientation.portrait)?const EdgeInsets.all(20): const EdgeInsets.only(left:30,right:30,bottom: 10),
          child:Column(
-          mainAxisAlignment: (MediaQuery.of(context).orientation == Orientation.portrait)?MainAxisAlignment.center:MainAxisAlignment.start,
+          mainAxisAlignment: (MediaQuery.of(context).orientation == Orientation.portrait)?MainAxisAlignment.center:MainAxisAlignment.center,
             children:[ 
              Container(
-          height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.35 : MediaQuery.of(context).size.height*0.6, // maximum item width
-          width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.94: MediaQuery.of(context).size.width*0.45, // maximum item width
-          decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/PortadaAppSf.png'),fit: BoxFit.fill),shape: BoxShape.rectangle),
+          height: (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.height*0.16 : MediaQuery.of(context).size.height*0.33, // maximum item width
+          width:  (MediaQuery.of(context).orientation == Orientation.portrait)? MediaQuery.of(context).size.width*0.74: MediaQuery.of(context).size.width*0.36, // maximum item width
+          decoration:const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/UTNLOGO.png'),fit: BoxFit.fill),shape: BoxShape.rectangle),
         ),
+          const Center(
+            child:Text(
+            'Proyecto Final',
+            style:TextStyle(fontSize: 24,fontStyle:FontStyle.normal,fontFamily: 'Times New Roman',fontWeight: FontWeight.w500 ),
+            textAlign: TextAlign.center,
+          ),),
+          const SizedBox(height: 30,),
+          const Center(
+            child:Text(
+            'Monitoreo y presentación digital de calidad de aire mediante detección de CO, HCHO, CO2 y Partículas',
+            style:TextStyle(fontSize: 24,fontStyle:FontStyle.normal,fontFamily: 'Times New Roman',fontWeight: FontWeight.w500 ),
+            textAlign: TextAlign.center,
+          ),),
+          const Spacer(),
           SizedBox(
             height: 50,
             width: 150,
@@ -169,7 +190,23 @@ Future<void> _handleSignIn() async {
               child: const Text('Iniciar Sesion'),
             ),
             ),
-         ])
+            const Spacer(),
+            const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                    Text(
+            'Meza, Lautaro',
+            style:TextStyle(fontSize: 20,fontStyle:FontStyle.normal,fontFamily: 'Times New Roman',fontWeight: FontWeight.w500 ),
+            textAlign: TextAlign.center,
+          ),
+                    Text(
+            'Ré, Boris',
+            style:TextStyle(fontSize: 20,fontStyle:FontStyle.normal,fontFamily: 'Times New Roman',fontWeight: FontWeight.w500 ),
+            textAlign: TextAlign.center,
+          ),
+              ],
+            )
+         ]))
         ),
        // bottomSheet: const Text('Meza Lautaro & Ré Boris',style: TextStyle(fontSize: 20,fontStyle: FontStyle.italic,fontFamily: 'Times New Roman'),),
       );
