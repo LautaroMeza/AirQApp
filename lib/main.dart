@@ -59,12 +59,13 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-       home: const LoginScreen(title: 'Inicio de Sesion'),
-  
+       initialRoute: '/',
+       
+       
       routes: {
+        '/':(context)=> const LoginScreen(title:'Inicio de Sesion'),
         '/home':(context) => const Dashboard(),
         '/registro':(context)=> const DataControl(),
-        '/login':(context)=> const LoginScreen(title:'Inicio de Sesion'),
         '/informacion':(context)=> const InformationPage(),
         '/acercaDe':(context)=> const AcercaDe(),
               },
@@ -127,7 +128,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if(credUser.user != null){
         firebaseuser = credUser.user!;
         setState(() {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const Dashboard()));
+          Navigator.of(context).pushReplacementNamed('/home');
+        //  Navigator.of(context).pushNamedAndRemoveUntil('/home',(Route<dynamic> route) => false);
         });
          
     }

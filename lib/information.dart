@@ -1,7 +1,7 @@
 import 'package:firebaseflutter/const/constant.dart';
 import 'package:firebaseflutter/data_control.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+
 
 import 'dashboard.dart';
 
@@ -9,11 +9,11 @@ import 'dashboard.dart';
 
 class AcercaDe extends StatelessWidget{
   const AcercaDe({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
-    return  PopScope(
-      child: Scaffold(
+    return PopScope(
+       child: Scaffold(
         backgroundColor: backgroundColor2,
         appBar: AppBar(
           backgroundColor: backgroundColor2,
@@ -94,9 +94,9 @@ class AcercaDe extends StatelessWidget{
               ],
            onTap:(value) => _handleroutes(true,value,context),
             ) 
-   )
-  );
+   ));
  }
+
 }
 
 
@@ -107,7 +107,7 @@ class InformationPage extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-   return  Scaffold(
+   return PopScope( child: Scaffold(
     backgroundColor: backgroundColor2,
       appBar: AppBar(
         backgroundColor: backgroundColor2,
@@ -200,8 +200,9 @@ class InformationPage extends StatelessWidget{
       ],
       onTap:(value) => _handleroutes(false,value,context),
   )
-  );
+  ));
   }
+
 }
  _handleroutes(bool info,int value,BuildContext context){
   

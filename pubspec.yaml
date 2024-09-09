@@ -47,6 +47,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.4.54
   flutter_local_notifications: ^17.2.2
   firebase_messaging: ^15.0.4
+  back_button_interceptor: ^7.0.3
 
 
 dev_dependencies:

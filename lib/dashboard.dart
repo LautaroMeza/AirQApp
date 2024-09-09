@@ -8,7 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'notifications_service.dart';
 import 'const/constant.dart';
 
@@ -40,7 +40,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState(){
     super.initState();
-     
+     BackButtonInterceptor.add(myInterceptor,context:context);
     _getMaxValues();
   _subscription = databaseReference
       .child('Actual')
@@ -94,7 +94,11 @@ class _DashboardState extends State<Dashboard>
    });
 
   }
-
+ @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -150,7 +154,7 @@ class _DashboardState extends State<Dashboard>
           ],
         ),
           ),
-      body: SafeArea(child: isLoading? GridView.count(
+      body:  SafeArea(child: isLoading? GridView.count(
               crossAxisCount: _screenRotate()? 1:2,
               mainAxisSpacing:0,
               crossAxisSpacing: 80,
@@ -340,11 +344,11 @@ class _DashboardState extends State<Dashboard>
     }
   _handleRegistro(){
     _subscription?.cancel();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const DataControl()));
+    Navigator.of(context).pushNamed('/registro');
     }
   _handleAcercaDe(){
           _subscription?.cancel();
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=> const AcercaDe()));
+    Navigator.of(context).push(MaterialPageRoute(builder: (context)=> const AcercaDe()));
     }
   _handleInfo(){
           _subscription?.cancel();
@@ -358,7 +362,7 @@ class _DashboardState extends State<Dashboard>
       desc: "Usted está por cerrar sesión",
       buttons: [
         DialogButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/home')),
           width: 120,
           child: const Text(
             "No",
@@ -385,7 +389,7 @@ class _DashboardState extends State<Dashboard>
     await googleSignIn.signOut();
     setState(() {
       isLoading = false;
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> const MyApp()), (Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> const MyApp()), ModalRoute.withName('/'));
     });
     
  
@@ -477,5 +481,11 @@ class _DashboardState extends State<Dashboard>
     if(event.snapshot.exists){
       jsonDataMax = event.snapshot.value as Map<dynamic,dynamic>;
     }
+  }
+
+  FutureOr<bool> myInterceptor(bool stopDefaultButtonEvent, RouteInfo routeInfo) {
+    if(routeInfo.ifRouteChanged(context))return false;
+    _handleLoginOutPopUp();
+    return true;  
   }
 }

@@ -1,5 +1,7 @@
 
 
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebaseflutter/const/constant.dart';
@@ -8,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
+import 'package:back_button_interceptor/back_button_interceptor.dart';
 import 'data_graph.dart';
 import 'information.dart';
 import 'main.dart';
@@ -39,10 +41,14 @@ class _DataControlState extends State<DataControl> {
 @override
   void initState(){
     super.initState();
-    
+     BackButtonInterceptor.add(myInterceptor);
     _getRegistros();   
     }
-
+ @override
+  void dispose() {
+    BackButtonInterceptor.remove(myInterceptor);
+    super.dispose();
+  }
   @override
 Widget build(BuildContext context) {
     return PopScope(child: Scaffold(
@@ -135,6 +141,7 @@ Widget build(BuildContext context) {
    
     
    }
+
 Widget tituloRegis(ExpansionFechas item,bool rotate){
   return TextButton(
     style: TextButton.styleFrom(
@@ -345,6 +352,10 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
   }
 
 
+  FutureOr<bool> myInterceptor(bool stopDefaultButtonEvent, RouteInfo routeInfo) {
+    return false;
+
+  }
 }
 
 String timeFormatDate(int timestamp){           
