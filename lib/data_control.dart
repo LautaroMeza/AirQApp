@@ -323,7 +323,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
       desc: "Usted está por enviar una peticion para calibrar sensores manualmente",
       buttons: [
         DialogButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/registro')),
           width: 120,
           child: const Text(
             "Cancelar",
@@ -351,7 +351,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
       desc: "Solicitud enviada. Recuerde dejar el dispositivo durante 20 minutos en una sala con aire limpio (400ppm)",
       buttons: [
         DialogButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/registro')),
           width: 120,
           child: const Text(
             "Listo",
@@ -395,7 +395,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
     await googleSignIn.signOut();
     setState(() {
       isLoading = false;
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> const MyApp()), (Route<dynamic> route) => false);
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=> const MyApp()), ModalRoute.withName('/'));
     });
     
  
