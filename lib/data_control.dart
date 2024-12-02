@@ -76,6 +76,12 @@ Widget build(BuildContext context) {
               onTap: _handleHome,
               ),
               ListTile(
+              leading:  const Icon(Icons.auto_mode_sharp),
+              title:  const Text('Calibración'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleCalibrarPopUp,
+              ),
+              ListTile(
               leading:  const Icon(Icons.history),
               title:  const Text('Registro'),
               selectedColor: Colors.blueGrey,
@@ -171,7 +177,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
                               expandIconColor: Colors.white,
                               expansionCallback: (int index, isExpanded) {
                                 setState(() {
-                                  
+                                    
                                    sublist[index].isExpanded =!sublist[index].isExpanded;
                                   
                                   
@@ -309,11 +315,57 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
     _handleInfo(){
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>const InformationPage()));
     }
+    _handleCalibrarPopUp(){
+       Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Calibración manual",
+      desc: "Usted está por enviar una peticion para calibrar sensores manualmente",
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "Cancelar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+        DialogButton(
+          onPressed: _handleCalibrar,
+          width: 120,
+          child: const Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )
+      ],
+    ).show();
+    }
+  Future<Null> _handleCalibrar() async {
+    databaseReference.child('Calibracion/calibrado').set(false);
+    databaseReference.child('Calibracion/calibrar').set(true);
+     Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Calibración manual",
+      desc: "Solicitud enviada. Recuerde dejar el dispositivo durante 20 minutos en una sala con aire limpio (400ppm)",
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "Listo",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ],
+    ).show();
+  }
   _handleLoginOutPopUp(){
     Alert(
       context: context,
       type: AlertType.info,
-      title: "Login Out",
+      title: "Log Out",
       desc: "Usted está por cerrar sesión",
       buttons: [
         DialogButton(

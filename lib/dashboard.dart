@@ -26,7 +26,6 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard>
      with TickerProviderStateMixin {
-
   bool isLoading= false;
   double ratiomax =0;
   StreamSubscription<DatabaseEvent>? _subscription;
@@ -40,6 +39,7 @@ class _DashboardState extends State<Dashboard>
   @override
   void initState(){
     super.initState();
+
      BackButtonInterceptor.add(myInterceptor,context:context);
     _getMaxValues();
   _subscription = databaseReference
@@ -128,6 +128,12 @@ class _DashboardState extends State<Dashboard>
               onTap: _handleHome,
               ),
               ListTile(
+              leading:  const Icon(Icons.auto_mode_sharp),
+              title:  const Text('Calibración'),
+              selectedColor: Colors.blueGrey,
+              onTap: _handleCalibrarPopUp,
+              ),
+              ListTile(
               leading:  const Icon(Icons.history),
               title:  const Text('Registro'),
               selectedColor: Colors.blueGrey,
@@ -135,7 +141,7 @@ class _DashboardState extends State<Dashboard>
               ),
                ListTile(
               leading:  const Icon(Icons.info_outline_rounded),
-              title:  const Text('Informacion'),
+              title:  const Text('Información'),
               selectedColor: Colors.blueGrey,
               onTap: _handleInfo,
             ),
@@ -149,7 +155,7 @@ class _DashboardState extends State<Dashboard>
               leading:  const Icon(Icons.logout_sharp),
               title:  const Text('Cerrar Sesión'),
               selectedColor: Colors.blueGrey,
-              onTap: _handleLoginOutPopUp,
+              onTap: _handleLogOutPopUp,
             ),
           ],
         ),
@@ -342,6 +348,52 @@ class _DashboardState extends State<Dashboard>
   _handleHome(){
       Navigator.pop(context);
     }
+  _handleCalibrarPopUp(){
+       Alert(
+      context: context,
+      type: AlertType.info,
+      title: "Calibración manual",
+      desc: "Usted está por enviar una peticion para calibrar sensores manualmente",
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/home')),
+          width: 120,
+          child: const Text(
+            "Cancelar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+        DialogButton(
+          onPressed: _handleCalibrar,
+          width: 120,
+          child: const Text(
+            "Aceptar",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        )
+      ],
+    ).show();
+    }
+  Future<Null> _handleCalibrar() async {
+    databaseReference.child('Calibracion/calibrado').set(false);
+    databaseReference.child('Calibracion/calibrar').set(true);
+     Alert(
+      context: context,
+      type: AlertType.success,
+      title: "Calibración manual",
+      desc: "Solicitud enviada. Recuerde dejar el dispositivo durante 20 minutos en una sala con aire limpio (400ppm)",
+      buttons: [
+        DialogButton(
+          onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/home')),
+          width: 120,
+          child: const Text(
+            "Listo",
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+        ),
+      ],
+    ).show();
+  }
   _handleRegistro(){
     _subscription?.cancel();
     Navigator.of(context).pushNamed('/registro');
@@ -354,11 +406,11 @@ class _DashboardState extends State<Dashboard>
           _subscription?.cancel();
     Navigator.of(context).push(MaterialPageRoute(builder: (context)=>const InformationPage()));
     }
-  _handleLoginOutPopUp(){
+  _handleLogOutPopUp(){
     Alert(
       context: context,
       type: AlertType.info,
-      title: "Login Out",
+      title: "Log Out",
       desc: "Usted está por cerrar sesión",
       buttons: [
         DialogButton(
@@ -485,7 +537,7 @@ class _DashboardState extends State<Dashboard>
 
   FutureOr<bool> myInterceptor(bool stopDefaultButtonEvent, RouteInfo routeInfo) {
     if(routeInfo.ifRouteChanged(context))return false;
-    _handleLoginOutPopUp();
+    _handleLogOutPopUp();
     return true;  
   }
 }
