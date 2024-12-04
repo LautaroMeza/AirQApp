@@ -58,7 +58,7 @@ Widget _createGraph(int index){ // Cambiar maxvalues.
       case 1:
       text = 'Humedad';
       unidad = '%';
-      maxvalue = 120;
+      maxvalue = 100;
       break;                                                                                
       case 2:         
       text = 'Monoxido de Carbono';
@@ -73,17 +73,17 @@ Widget _createGraph(int index){ // Cambiar maxvalues.
       case 4:         
       text = 'Particulas PM 10';
       unidad = 'ug/m3';
-      maxvalue = 60;
+      maxvalue = 70;
       break;
       case 5:         
       text = 'Particulas PM 2.5';
       unidad = 'ug/m3';
-      maxvalue = 150;
+      maxvalue = 70;
       break;                                                                 
     default:         
       text = 'Formaldehido';
       unidad = 'ppm';
-      maxvalue = 5;
+      maxvalue = 15;
       break;
   }
   return SfCartesianChart(
