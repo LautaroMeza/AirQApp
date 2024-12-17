@@ -504,13 +504,13 @@ double status = item.currval/item.maxvalue;
                                      const Spacer(flex: 2,),
                                       Text(
                                           '${item.currval}',
-                                          style: const TextStyle(
-                                                  fontSize: 50, fontWeight: FontWeight.bold),
+                                          style:  const TextStyle(
+                                                  fontSize: 35, fontWeight: FontWeight.bold),
                                       ),
                                        Text(
                                         item.unidad, 
                                         style: const TextStyle(
-                                          fontSize: 50, fontWeight: FontWeight.bold),
+                                          fontSize: 35, fontWeight: FontWeight.bold),
                                       ),
                                        const Spacer(flex:2),
                                       Column(                                      

@@ -9,7 +9,6 @@ const buttonColor = Color.fromARGB(150, 180, 255, 220);
 const  itemColor = Color.fromARGB(255, 246, 252, 136);
 const  itemColor2 = Color.fromARGB(255, 246, 252, 136);
 const selectionColor = Color(0xFF88B2AC);
-
 const defaultPadding = 15.0;
 /*|
 #define MAGENTA  0x785893  // 0xF81F      // Magenta
@@ -36,4 +35,6 @@ const defaultPadding = 15.0;
 #define STRONG_ORANGE  0xFFA0
 #define tukson 0xB8675D
  */
-
+double textsize(BuildContext context,double factor){
+  return MediaQuery.of(context).size.width*factor;
+}

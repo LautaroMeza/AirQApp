@@ -222,9 +222,9 @@ class _DashboardState extends State<Dashboard>
                             
  
             ],
-        ) :const  Center(child:  Text('Cargando',
+        ) :  Center(child:  Text('Cargando',
               style: TextStyle(
-              fontSize: 30, fontWeight:  FontWeight.bold),
+              fontSize: textsize(context,0.1), fontWeight:  FontWeight.bold),
          )
      )),    
     );
