@@ -83,13 +83,13 @@ Widget _createGraph(int index){ // Cambiar maxvalues.
     default:         
       text = 'Formaldehido';
       unidad = 'ppm';
-      maxvalue = 15;
+      maxvalue = 10;
       break;
   }
   return SfCartesianChart(
       onTooltipRender: ((tooltipArgs) =>tooltipArgs.text= '${tooltipArgs.text} $unidad'),
       zoomPanBehavior: ZoomPanBehavior(enablePinching: true,),
-      primaryXAxis: DateTimeAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),interval: 5,labelStyle: const TextStyle(color: Colors.white)),
+      primaryXAxis: DateTimeAxis(majorGridLines: MajorGridLines(color: Colors.grey[400],width: 0.7,dashArray: const [1,2,3,4]),labelStyle: const TextStyle(color: Colors.white)),
       title: ChartTitle(alignment: ChartAlignment.center,text: text,textStyle: const TextStyle(
                 fontFamily: 'Arial',
                 fontSize: 15,
