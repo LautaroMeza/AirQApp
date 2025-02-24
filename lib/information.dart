@@ -18,7 +18,7 @@ class AcercaDe extends StatelessWidget{
         appBar: AppBar(
           backgroundColor: backgroundColor2,
           leading:const  Image(image: AssetImage('assets/images/UTNLOGO2.png'),),
-          title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
+          title: const Text('Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
             ),
         body: SafeArea(
               child:Padding(
@@ -112,7 +112,7 @@ class InformationPage extends StatelessWidget{
       appBar: AppBar(
         backgroundColor: backgroundColor2,
         leading:const  Image(image: AssetImage('assets/images/UTNLOGO2.png'),),
-        title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
+        title: const Text('Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
       body: const SafeArea(
         child: Padding(

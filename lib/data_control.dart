@@ -55,7 +55,7 @@ Widget build(BuildContext context) {
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        title: const Text('\t \t \t \t \t Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
+        title: const Text('Calidad del Aire',textAlign: TextAlign.start,style: TextStyle(fontStyle: FontStyle.italic,fontSize: 30,fontWeight: FontWeight.bold)),
       ),
       drawer: Drawer( 
           backgroundColor: backgroundColor2,
@@ -187,7 +187,7 @@ Widget cuerpoRegis(ExpansionFechas item,List<ExpansionRegistro> sublist){
                                 return ExpansionPanel(
                                   backgroundColor: Colors.black,
                                   headerBuilder: (BuildContext context, bool isExpanded){
-                                            return Padding(padding:const  EdgeInsets.only(top:15,bottom: 0,left: 7),child:Text(item.hora, textAlign: TextAlign.start,style: const TextStyle(color: Colors.white,fontSize: 20),)); // falta poner estilos
+                                            return Padding(padding:const  EdgeInsets.only(top:15,bottom: 0,left: 5),child:Text(item.hora, textAlign: TextAlign.start,style: const TextStyle(color: Colors.white,fontSize: 20),)); // falta poner estilos
                                   },
                                  isExpanded: item.isExpanded,
                                   body: Column(                        
@@ -505,18 +505,18 @@ double status = item.currval/item.maxvalue;
                                       Text(
                                           '${item.currval}',
                                           style:  const TextStyle(
-                                                  fontSize: 35, fontWeight: FontWeight.bold),
+                                                  fontSize: 25, fontWeight: FontWeight.bold),
                                       ),
                                        Text(
                                         item.unidad, 
                                         style: const TextStyle(
-                                          fontSize: 35, fontWeight: FontWeight.bold),
+                                          fontSize: 25, fontWeight: FontWeight.bold),
                                       ),
                                        const Spacer(flex:2),
                                       Column(                                      
                                       children: [
                                       const Text('Nivel critico:', textAlign: TextAlign.center,style: TextStyle(fontSize: 15),),
-                                           Text('${item.maxvalue} ${item.unidad}',style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                                           Text('${item.maxvalue} ${item.unidad}',style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                                       ),
                                     ],), 
                                     ],
